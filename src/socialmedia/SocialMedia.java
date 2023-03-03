@@ -13,8 +13,10 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
-		// TODO Auto-generated method stub
-		return 0;
+		Account newAccount;
+		newAccount = new Account(handle);
+		System.out.println("New "+newAccount);
+		return newAccount.getIdentifier();
 	}
 
 	@Override
