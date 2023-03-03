@@ -22,7 +22,7 @@ public class Post {
 
     // Method: Get Author ID
     public int getAuthorID() {
-        return authorID
+        return authorID;
     }
 
     // Method: Get List of Comments and Endorsements
