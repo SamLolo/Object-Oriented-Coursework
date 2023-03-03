@@ -2,13 +2,19 @@ package socialmedia;
 
 public class Account {
     // Private Attributes
-    private int identifier;
+    private static int Count = 0;
+    private int Identifier;
     private String handle;
-    private String description;
+    private String description = "";
+
+    // Method: To String
+    public String toString() {
+        return "Account[id="+Identifier+", handle="+handle+", description="+description+"]";
+    }
 
     // Method: Get Identifier
     public int getIdentifier() {
-        return identifier;
+        return Identifier;
     }
 
     // Method: Get Handle
@@ -32,14 +38,14 @@ public class Account {
     }
 
     // 2 Overloadeded Constructors
-    public int Account(String handle, String description) {
+    public Account(String handle, String description) {
         this.handle = handle;
         this.description = description;
-        return identifier;
+        this.Identifier = ++Count;
     }
 
-    public int Account(String handle) {
+    public Account(String handle) {
         this.handle = handle;
-        return identifier;
+        this.Identifier = ++Count;
     }
 }
