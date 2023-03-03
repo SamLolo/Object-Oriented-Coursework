@@ -1,11 +1,14 @@
 package socialmedia;
 
+import java.util.ArrayList;
+
 public class Account {
     // Private Attributes
     private static int Count = 0;
     private int Identifier;
     private String handle;
     private String description = "";
+    private ArrayList<Post> posts = new ArrayList<Post>();
 
     // Method: To String
     public String toString() {
@@ -35,6 +38,11 @@ public class Account {
     // Method: Set Description
     public void setDescription(String d) {
         description = d;
+    }
+
+    // Method: Get Posts
+    public ArrayList<Post> getPosts() {
+        return posts;
     }
 
     // 2 Overloadeded Constructors
