@@ -1,6 +1,7 @@
 package socialmedia;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * BadSocialMedia is a minimally compiling, but non-functioning implementor of
@@ -10,6 +11,7 @@ import java.io.IOException;
  * @version 1.0
  */
 public class SocialMedia implements SocialMediaPlatform {
+	private ArrayList<Post> posts = new ArrayList<>();
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -58,8 +60,10 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
-		Post.
-		return 0;
+		Post newPost;
+		newPost = new Post(handle,message);
+		this.posts.add(newPost);
+		return newPost.getIdentifier();
 	}
 
 	@Override
@@ -78,7 +82,14 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < this.posts.size(); i++) {
+			Post post = posts.get(i);
+			int postID = post.getIdentifier();
+			if (postID == id) {
+				posts.remove(postID - 1);
+				break;
+			}
+		}
 
 	}
 
@@ -100,11 +111,10 @@ public class SocialMedia implements SocialMediaPlatform {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+// Fix
 	@Override
 	public int getTotalOriginalPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		return posts.size();
 	}
 
 	@Override
