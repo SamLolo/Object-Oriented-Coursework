@@ -7,7 +7,7 @@ public class Post {
     private String message;
     // Needs to be up to 100 Chars
     private int authorID;
-    private List commentsEndorsments;
+    private final List commentsEndorsements;
     // ?? array of comments and endorsements
 
     // Method: Get Identifier
@@ -16,8 +16,8 @@ public class Post {
     }
 
     // Method: Get Message
-    public string getMessage() {
-        return message
+    public String getMessage() {
+        return message;
     }
 
     // Method: Get Author ID
@@ -25,9 +25,9 @@ public class Post {
         return authorID
     }
 
-    // Method: Get List of Comments and Endorsments
-    public List getCommentsEndorsments() {
-        return commentsEndorsments;
+    // Method: Get List of Comments and Endorsements
+    public List getCommentsEndorsements() {
+        return commentsEndorsements;
     }
 
     // Method set ID
@@ -47,15 +47,15 @@ public class Post {
 
     // Method Add to list of comments and endorsements
     public void addCommentEndorsment(int ID) {
-        this.commentsEndorsments.add(ID);
+        this.commentsEndorsements.add(ID);
     }
 
     // Overloaded Constructors (To be continued)
-    public void Post(int identifier, String message, int authorID, List commentsEndorsments) {
+    public Post(int identifier, String message, int authorID, List commentsEndorsements) {
         this.identifier = identifier;
         this.message = message;
         this.authorID = authorID;
-        this.commentsEndorsments = commentsEndorsments;
+        this.commentsEndorsements = commentsEndorsements;
     }
 }
 
