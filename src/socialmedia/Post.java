@@ -8,8 +8,10 @@ public class Post {
     private int identifier;
     private String message;
     private String authorHandle;
-    private ArrayList<Integer> commentsEndorsements = new ArrayList<>();
-    // ?? array of comments and endorsements
+    private ArrayList<Comment> comments = new ArrayList<>();
+
+    private ArrayList<Endorsement> endorsements = new ArrayList<>();
+
 
     // Overloaded Constructors (To be continued)
     public Post(String handle, String message) {
@@ -21,6 +23,17 @@ public class Post {
 
     public int getIdentifier() {
         return identifier;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    // Sets original post id to null as the original post has been deleted
+    public void createOrphans() {
+        for (int i = 0; i < comments.size(); i++) {
+            comments.get(i).setOriginalPostIDtoNull();
+        }
     }
 }
 

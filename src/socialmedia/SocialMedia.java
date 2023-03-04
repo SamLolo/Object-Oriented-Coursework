@@ -2,6 +2,7 @@ package socialmedia;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * BadSocialMedia is a minimally compiling, but non-functioning implementor of
@@ -164,35 +165,94 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
+		// Checks to see if the account exists
+		boolean check = true;
+		for (int i=0; i<accounts.size(); i++) {
+			if (accounts.get(i).getHandle() == handle) {
+				check = false;
+				break;
+			}
+		}
+		if (check) {
+			throw new HandleNotRecognisedException("The Account doesn't exist.");
+		}
+		// Checks to see if the post is valid.
+		if (message.length() > 100) {
+			throw new InvalidPostException("The Post message is too long.");
+		} else if (message.length() < 1) {
+			throw new InvalidPostException("The Post message is too short.");
+		}
+
 		Post newPost;
 		newPost = new Post(handle,message);
-		this.posts.add(newPost);
+		posts.add(newPost);
 		return newPost.getIdentifier();
 	}
 
 	@Override
 	public int endorsePost(String handle, int id)
 			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-		// TODO Auto-generated method stub
+		// Checks to see if the account exists
+		boolean check = true;
+		for (int i=0; i<accounts.size(); i++) {
+			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
+				check = false;
+				break;
+			}
+		}
+		if (check) {
+			throw new HandleNotRecognisedException("The Account doesn't exist.");
+		}
+		else {
+
+		// Checks to see if the post exists
+		boolean check1 = true;
+		for (int i=0; i<posts.size(); i++) {
+			if (posts.get(i).getIdentifier() == id) {
+				// Creating New comment and adding it to the list of comments linked to the post
+				Comment newComment;
+				newComment = new Comment(handle, id, message);
+				posts.get(i).addComment(newComment);
+
+				check1 = false;
+				break;
+			}
+		}
+
+		if (check1) {
+			throw new PostIDNotRecognisedException("The Post doesn't exist.");
+		}}
+
+
 		return 0;
 	}
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
+		// Check variable as if post ID is not Found it will remain False.
+		boolean check = false;
+
+		// Search through the list of post objects.
 		for (int i = 0; i < this.posts.size(); i++) {
 			Post post = posts.get(i);
 			int postID = post.getIdentifier();
 			if (postID == id) {
+				posts.get(postID).createOrphans();
 				posts.remove(postID - 1);
+				check = true;
 				break;
 			}
+		}
+
+		if (check) {
+			throw new PostIDNotRecognisedException("The Post ID was not found.");
 		}
 
 	}
