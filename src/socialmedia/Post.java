@@ -33,7 +33,14 @@ public class Post {
     public void createOrphans() {
         for (int i = 0; i < comments.size(); i++) {
             comments.get(i).setOriginalPostIDtoNull();
+            endorsements.get(i).setOriginalPostIDtoNull();
         }
+    }
+    public String getMessage(){
+        return this.message;
+    }
+    public void addEndorsement(Endorsement endorsement) {
+        endorsements.add(endorsement);
     }
 }
 

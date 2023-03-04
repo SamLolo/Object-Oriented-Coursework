@@ -192,6 +192,36 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int endorsePost(String handle, int id)
 			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+		// Checks to see if the account exists
+		boolean check = true;
+		for (int i=0; i<accounts.size(); i++) {
+			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
+				check = false;
+				break;
+			}
+		}
+		if (check) {
+			throw new HandleNotRecognisedException("The Account doesn't exist.");
+		}
+		else {
+
+			// Checks to see if the post exists
+			boolean check1 = true;
+			for (int i=0; i<posts.size(); i++) {
+				if (posts.get(i).getIdentifier() == id) {
+					// Creating New comment and adding it to the list of comments linked to the post
+					Endorsement newEndorsement;
+					newEndorsement = new Endorsement(handle, id, posts.get(i).getMessage());
+					posts.get(i).addEndorsement(newEndorsement);
+
+					check1 = false;
+					break;
+				}
+			}
+
+			if (check1) {
+				throw new PostIDNotRecognisedException("The Post doesn't exist.");
+			}}
 
 		return 0;
 	}

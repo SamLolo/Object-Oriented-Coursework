@@ -17,7 +17,7 @@ public class SocialMediaPlatformTestApp {
 	 * 
 	 * @param args not used
 	 */
-	public static void main(String[] args) throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException {
+	public static void main(String[] args) throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException, IllegalHandleException, InvalidHandleException, NotActionablePostException {
 		postTesting();
 
 		System.out.println("The system compiled and started the execution...");
@@ -49,24 +49,18 @@ public class SocialMediaPlatformTestApp {
 		}
 	}
 
-	public static void postTesting() throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException {
+	public static void postTesting() throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException, IllegalHandleException, InvalidHandleException, NotActionablePostException {
 		System.out.println("The system compiled and started the execution...");
 
 		SocialMediaPlatform platform = new SocialMedia();
 
+		platform.createAccount("handle");
+
 		int id = platform.createPost("handle", "message");
 		System.out.println(id);
 
-		int id1 = platform.createPost("handle", "message");
-		System.out.println(id1);
+		platform.endorsePost("handle", id);
 
-		int temp1 = platform.getTotalOriginalPosts();
-		System.out.println(temp1);
-
-		platform.deletePost(2);
-
-		int temp2 = platform.getTotalOriginalPosts();
-		System.out.println(temp2);
 
 	}
 }
