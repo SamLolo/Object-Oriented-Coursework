@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class Account {
     // Private Attributes
-    private static int Count = 0;
-    private int Identifier;
+    private static int count = 0;
+    private int identifier;
     private String handle;
     private String description = "";
     private ArrayList<Post> posts = new ArrayList<Post>();
 
     // Method: To String
     public String toString() {
-        return "Account[id="+Identifier+", handle="+handle+", description="+description+"]";
+        return "Account[id="+identifier+", handle="+handle+", description="+description+"]";
     }
 
     // Method: Get Identifier
     public int getIdentifier() {
-        return Identifier;
+        return identifier;
     }
 
     // Method: Get Handle
@@ -45,15 +45,22 @@ public class Account {
         return posts;
     }
 
+    // Method: Create Post
+    public Post createPost(String message) {
+        Post newPost = new Post(handle, message);
+        posts.add(newPost);
+        return newPost;
+    }
+
     // 2 Overloadeded Constructors
     public Account(String handle, String description) {
         this.handle = handle;
         this.description = description;
-        this.Identifier = ++Count;
+        this.identifier = ++count;
     }
 
     public Account(String handle) {
         this.handle = handle;
-        this.Identifier = ++Count;
+        this.identifier = ++count;
     }
 }

@@ -166,14 +166,15 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 		// Checks to see if the account exists
-		boolean check = true;
+		Account account = null;
 		for (int i=0; i<accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
-				check = false;
+				account = accounts.get(i);
 				break;
 			}
 		}
-		if (check) {
+		
+		if (account == null) {
 			throw new HandleNotRecognisedException("The Account doesn't exist.");
 		}
 		// Checks to see if the post is valid.
@@ -183,8 +184,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("The Post message is too short.");
 		}
 
-		Post newPost;
-		newPost = new Post(handle,message);
+		Post newPost = account.createPost(message);
 		posts.add(newPost);
 		return newPost.getIdentifier();
 	}
@@ -293,15 +293,10 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i = 0; i < this.posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
 				postInfo.append("Id: ").append(posts.get(i).getIdentifier());
-				postInfo.append("\n");
-				postInfo.append("Account: ").append(posts.get(i).getAuthorHandle());
-				postInfo.append("\n");
-				postInfo.append("NO. endorsements: ").append(posts.get(i).getNOEndorsements());
-				postInfo.append("  |  ");
-				postInfo.append("NO. Comments: ").append(posts.get(i).getNOComments());
-				postInfo.append("\n");
-				postInfo.append(posts.get(i).getMessage());
-				postInfo.append("\n");
+				postInfo.append("\nAccount: ").append(posts.get(i).getAuthorHandle());
+				postInfo.append("\nNO. endorsements: ").append(posts.get(i).getNOEndorsements());
+				postInfo.append("  |  NO. comments: ").append(posts.get(i).getNOComments());
+				postInfo.append("\n").append(posts.get(i).getMessage());
 				check = false;
 				break;
 			}
@@ -322,13 +317,13 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getNumberOfAccounts() {
-		// TODO Auto-generated method stub
-		return 0;
+		return accounts.size();
 	}
-// Fix
+
 	@Override
 	public int getTotalOriginalPosts() {
-		return posts.size();
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	@Override

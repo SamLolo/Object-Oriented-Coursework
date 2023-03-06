@@ -15,7 +15,7 @@ public class Post {
 
     // Overloaded Constructors (To be continued)
     public Post(String handle, String message) {
-        this.identifier = (++count);
+        this.identifier = ++count;
         this.message = message;
         this.authorHandle = handle;
 
@@ -25,12 +25,20 @@ public class Post {
         return identifier;
     }
 
-    public String getAuthorHandle() { return authorHandle; }
+    public String getAuthorHandle() { 
+        return authorHandle; 
+    }
 
-    public int getNOEndorsements() { return endorsements.size(); }
-    public int getNOComments() { return comments.size(); }
-    public String getMessage(){
-        return this.message;
+    public int getNOEndorsements() { 
+        return endorsements.size(); 
+    }
+
+    public int getNOComments() { 
+        return comments.size(); 
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public void addComment(Comment comment) {
