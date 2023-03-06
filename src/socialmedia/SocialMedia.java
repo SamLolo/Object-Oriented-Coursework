@@ -310,7 +310,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		if (check) {
 			throw new PostIDNotRecognisedException("The Post ID was not found.");
 		}
-		return postInfo;
+		return postInfo.toString();
 	}
 
 	@Override
