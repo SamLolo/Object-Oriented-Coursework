@@ -46,13 +46,25 @@ public class Account {
     }
 
     // Method: Create Post
-    public Post createPost(String message) {
-        Post newPost = new Post(handle, message);
+    public Post createPost(String message, Account account) {
+        Post newPost = new Post(account, message);
         posts.add(newPost);
         return newPost;
     }
 
-    // 2 Overloadeded Constructors
+    public Comment createComment(int id, String message, Account account) {
+        Comment newComment = new Comment(id, message, account);
+        posts.get(id).addComment(newComment);
+        return newComment;
+    }
+
+    public Endorsement createEndorsement(int id, Account account) {
+        Endorsement newEndorsement = new Endorsement(account, id, posts.get(id).getMessage());
+        posts.get(id).addEndorsement(newEndorsement);
+        return newEndorsement;
+    }
+
+    // 2 Overloaded Constructors
     public Account(String handle, String description) {
         this.handle = handle;
         this.description = description;

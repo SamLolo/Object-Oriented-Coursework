@@ -15,6 +15,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	// 2 Private Attributes
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ArrayList<Post> posts = new ArrayList<>();
+	private ArrayList<Post> emptyPosts = new ArrayList<>();
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -184,7 +185,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("The Post message is too short.");
 		}
 
-		Post newPost = account.createPost(message);
+		Post newPost = account.createPost(message, account);
 		posts.add(newPost);
 		return newPost.getIdentifier();
 	}
@@ -192,93 +193,81 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int endorsePost(String handle, int id)
 			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+
 		// Checks to see if the account exists
-		boolean check = true;
+		Account account = null;
 		for (int i=0; i<accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
-				check = false;
+				account = accounts.get(i);
 				break;
 			}
 		}
-		if (check) {
+		if (account == null) {
 			throw new HandleNotRecognisedException("The Account doesn't exist.");
 		}
 		else {
-
 			// Checks to see if the post exists
-			boolean check1 = true;
 			for (int i=0; i<posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
 					// Creating New comment and adding it to the list of comments linked to the post
-					Endorsement newEndorsement;
-					newEndorsement = new Endorsement(handle, id, posts.get(i).getMessage());
-					posts.get(i).addEndorsement(newEndorsement);
-
-					check1 = false;
-					break;
+					Endorsement newEndorsement = account.createEndorsement(id, account);
+					return newEndorsement.getIdentifier();
 				}
 			}
-
-			if (check1) {
-				throw new PostIDNotRecognisedException("The Post doesn't exist.");
-			}}
-
-		return 0;
+			throw new PostIDNotRecognisedException("The Post doesn't exist.");
+			}
 	}
 
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
+
 		// Checks to see if the account exists
-		boolean check = true;
-		for (int i=0; i<accounts.size(); i++) {
+		Account account = null;
+		for (int i = 0; i < accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
-				check = false;
+				account = accounts.get(i);
 				break;
 			}
 		}
-		if (check) {
+		if (account == null) {
 			throw new HandleNotRecognisedException("The Account doesn't exist.");
-		}
-		else {
+		} else {
+			// Checks to see if the post exists
+			for (int i = 0; i < posts.size(); i++) {
+				if (posts.get(i).getIdentifier() == id) {
 
-		// Checks to see if the post exists
-		boolean check1 = true;
-		for (int i=0; i<posts.size(); i++) {
-			if (posts.get(i).getIdentifier() == id) {
-				// Creating New comment and adding it to the list of comments linked to the post
-				Comment newComment;
-				newComment = new Comment(handle, id, message);
-				posts.get(i).addComment(newComment);
-
-				check1 = false;
-				break;
+					// Creating New comment by using the function in Account
+					Comment newComment = account.createComment(id, message, account);
+					// Returning the ID of the new comment
+					return newComment.getIdentifier();
+				}
 			}
-		}
-
-		if (check1) {
 			throw new PostIDNotRecognisedException("The Post doesn't exist.");
-		}}
-
-
-		return 0;
+		}
 	}
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
 		// Check variable as if post ID is not Found it will remain False.
-		boolean check = false;
+		Post post = null;
 
 		// Search through the list of post objects.
 		for (int i = 0; i < this.posts.size(); i++)
 			if (posts.get(i).getIdentifier() == id) {
-				posts.get(i).createOrphans();
+				// New empty post is created that is a placeholder for the comments of the original list
+				Post emptypPost = new Post(null, "The original content was removed from the system and is no longer available.");
+				// The empty lists comments may still need to be accessed, so the object location is saved
+				emptyPosts.add(emptypPost);
+
+				// The post is then deleted loosing the location of the original post and all of its endorsements
+				posts.get(i).deletePost(emptypPost.getIdentifier());
 				posts.remove(posts.get(i).getIdentifier() - 1);
-				check = true;
+				post = posts.get(i);
 				break;
 			}
 
-		if (check) {
+		if (post == null) {
 			throw new PostIDNotRecognisedException("The Post ID was not found.");
 		}
 
@@ -286,26 +275,18 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		StringBuilder postInfo = new StringBuilder();
-		boolean check = true;
+		Post post = null;
 
 		// Search through the list of post objects.
 		for (int i = 0; i < this.posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
-				postInfo.append("Id: ").append(posts.get(i).getIdentifier());
-				postInfo.append("\nAccount: ").append(posts.get(i).getAuthorHandle());
-				postInfo.append("\nNO. endorsements: ").append(posts.get(i).getNOEndorsements());
-				postInfo.append("  |  NO. comments: ").append(posts.get(i).getNOComments());
-				postInfo.append("\n").append(posts.get(i).getMessage());
-				check = false;
-				break;
+				post = posts.get(i);
+				StringBuilder postInfo = post.getPostInfo();
+				return postInfo.toString();
 			}
 		}
 
-		if (check) {
-			throw new PostIDNotRecognisedException("The Post ID was not found.");
-		}
-		return postInfo.toString();
+		throw new PostIDNotRecognisedException("The Post ID was not found.");
 	}
 
 	@Override
