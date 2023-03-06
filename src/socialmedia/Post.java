@@ -25,6 +25,14 @@ public class Post {
         return identifier;
     }
 
+    public String getAuthorHandle() { return authorHandle; }
+
+    public int getNOEndorsements() { return endorsements.size(); }
+    public int getNOComments() { return comments.size(); }
+    public String getMessage(){
+        return this.message;
+    }
+
     public void addComment(Comment comment) {
         comments.add(comment);
     }
@@ -35,9 +43,6 @@ public class Post {
             comments.get(i).setOriginalPostIDtoNull();
             endorsements.get(i).setOriginalPostIDtoNull();
         }
-    }
-    public String getMessage(){
-        return this.message;
     }
     public void addEndorsement(Endorsement endorsement) {
         endorsements.add(endorsement);

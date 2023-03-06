@@ -270,16 +270,13 @@ public class SocialMedia implements SocialMediaPlatform {
 		boolean check = false;
 
 		// Search through the list of post objects.
-		for (int i = 0; i < this.posts.size(); i++) {
-			Post post = posts.get(i);
-			int postID = post.getIdentifier();
-			if (postID == id) {
-				posts.get(postID).createOrphans();
-				posts.remove(postID - 1);
+		for (int i = 0; i < this.posts.size(); i++)
+			if (posts.get(i).getIdentifier() == id) {
+				posts.get(i).createOrphans();
+				posts.remove(posts.get(i).getIdentifier() - 1);
 				check = true;
 				break;
 			}
-		}
 
 		if (check) {
 			throw new PostIDNotRecognisedException("The Post ID was not found.");
@@ -289,8 +286,31 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder postInfo = new StringBuilder();
+		boolean check = true;
+
+		// Search through the list of post objects.
+		for (int i = 0; i < this.posts.size(); i++) {
+			if (posts.get(i).getIdentifier() == id) {
+				postInfo.append("Id: ").append(posts.get(i).getIdentifier());
+				postInfo.append("\n");
+				postInfo.append("Account: ").append(posts.get(i).getAuthorHandle());
+				postInfo.append("\n");
+				postInfo.append("NO. endorsements: ").append(posts.get(i).getNOEndorsements());
+				postInfo.append("  |  ");
+				postInfo.append("NO. Comments: ").append(posts.get(i).getNOComments());
+				postInfo.append("\n");
+				postInfo.append(posts.get(i).getMessage());
+				postInfo.append("\n");
+				check = false;
+				break;
+			}
+		}
+
+		if (check) {
+			throw new PostIDNotRecognisedException("The Post ID was not found.");
+		}
+		return postInfo;
 	}
 
 	@Override
