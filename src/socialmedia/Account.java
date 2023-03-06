@@ -52,16 +52,43 @@ public class Account {
         return newPost;
     }
 
-    public Comment createComment(int id, String message, Account account) {
-        Comment newComment = new Comment(id, message, account);
-        posts.get(id).addComment(newComment);
+    // Method: Create Comment
+    public Comment createComment(Post post, String message, Account account) {
+        Comment newComment = new Comment(post.getIdentifier(), message, account);
+        post.addComment(newComment);
         return newComment;
     }
 
-    public Endorsement createEndorsement(int id, Account account) {
-        Endorsement newEndorsement = new Endorsement(account, id, posts.get(id).getMessage());
-        posts.get(id).addEndorsement(newEndorsement);
+    // Method: Create Endorsement
+    public Endorsement createEndorsement(Post post, Account account) {
+        Endorsement newEndorsement = new Endorsement(account, post.getIdentifier(), post.getMessage());
+        post.addEndorsement(newEndorsement);
         return newEndorsement;
+    }
+
+    // Method: Sum Endorsements For All Posts
+    public int getTotalEndorsments() {
+        int total = 0;
+        for (int i=0; i<posts.size(); i++) {
+            ArrayList<Endorsement> endorsements = posts.get(i).getEndorsements();
+            total += endorsements.size();
+        }
+        return total;
+    }
+
+    // Method: Get Account Info In Formatted StringBuilder
+    public StringBuilder getInfo() {
+        // Get total endorsements recieved by account
+        int endorsementCount = getTotalEndorsments();
+
+        // Create StringBuilder using account information
+        StringBuilder info = new StringBuilder();
+        info.append("ID: ").append(identifier);
+        info.append("\nHandle: ").append(handle);
+        info.append("\nDescription: ").append(description);
+        info.append("\nPost count: ").append(posts.size());
+        info.append("\nEndorse count: ").append(endorsementCount);
+        return info;
     }
 
     // 2 Overloaded Constructors

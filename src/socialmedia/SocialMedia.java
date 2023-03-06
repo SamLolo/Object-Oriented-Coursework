@@ -12,7 +12,7 @@ import java.util.Objects;
  * @version 1.0
  */
 public class SocialMedia implements SocialMediaPlatform {
-	// 2 Private Attributes
+	// 3 Private Attributes
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ArrayList<Post> posts = new ArrayList<>();
 	private ArrayList<Post> emptyPosts = new ArrayList<>();
@@ -29,7 +29,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		// Check if handle is unique (doesn't already exist)
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				throw new InvalidHandleException("Handle '"+handle+"' already exists!");
 			}
@@ -54,7 +54,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		// Check if handle is unique (doesn't already exist)
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				throw new InvalidHandleException("Handle '"+handle+"' already exists!");
 			}
@@ -71,7 +71,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void removeAccount(int id) throws AccountIDNotRecognisedException {
 		// Get account with given identifier
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getIdentifier() == id) {
 				account = accounts.get(i);
 				break;
@@ -80,17 +80,22 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Throw AccountIDNotRecognisedException if account cannot be found with given handle
         if (account == null) {
-            throw new AccountIDNotRecognisedException("Failed to find an account with id: '"+id+"'");
+            throw new AccountIDNotRecognisedException("Un-able to find an account with id: "+id+"!");
         }
 
-		// TODO: Add functionality to delete all posts
+		ArrayList<Post> accountPosts = account.getPosts();
+		for (int i=0; i < accountPosts.size(); i++) {
+			Post post = accountPosts.get(i);
+			post.deletePost(0);
+			posts.remove(post.getIdentifier() - 1);
+		}
 	}
 
 	@Override
 	public void removeAccount(String handle) throws HandleNotRecognisedException {
 		// Get account with given handle
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				account = accounts.get(i);
 				break;
@@ -99,10 +104,15 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Throw HandleNotRecognisedException if account cannot be found with given handle
         if (account == null) {
-            throw new HandleNotRecognisedException("'"+handle+"' is not an existing account handle!");
+            throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
         }
 
-		// TODO: Add functionality to delete all posts
+		ArrayList<Post> posts = account.getPosts();
+		for (int i=0; i < posts.size(); i++) {
+			Post post = posts.get(i);
+			post.deletePost(0);
+			posts.remove(post.getIdentifier() - 1);
+		}
 
 	}
 
@@ -111,7 +121,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
 		// Get account with given handle
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == oldHandle) {
 				account = accounts.get(i);
 				break;
@@ -120,7 +130,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Throw HandleNotRecognisedException if account cannot be found with given handle
         if (account == null) {
-            throw new HandleNotRecognisedException("'"+oldHandle+"' is not an existing account handle!");
+            throw new HandleNotRecognisedException("Un-able to find account with handle: "+oldHandle+"!");
         }
 
 		// Check handle is valid (not null; no whitespace; <=30 characters)
@@ -133,7 +143,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		// Check if handle is unique (doesn't already exist)
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == newHandle) {
 				throw new InvalidHandleException("Handle '"+newHandle+"' already exists!");
 			}
@@ -147,7 +157,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		// Get account with given handle
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				account = accounts.get(i);
 				break;
@@ -160,15 +170,24 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showAccount(String handle) throws HandleNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		// Search through the list of post objects.
+		for (int i=0; i < accounts.size(); i++) {
+			if (accounts.get(i).getHandle() == handle) {
+				Account account = accounts.get(i);
+				StringBuilder accountInfo = account.getInfo();
+				return accountInfo.toString();
+			}
+		}
+
+		// Throw PostIDNotRecognisedException if no post found matching given id
+		throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 	}
 
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 		// Checks to see if the account exists
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				account = accounts.get(i);
 				break;
@@ -176,13 +195,13 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 		
 		if (account == null) {
-			throw new HandleNotRecognisedException("The Account doesn't exist.");
+			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		}
 		// Checks to see if the post is valid.
 		if (message.length() > 100) {
-			throw new InvalidPostException("The Post message is too long.");
+			throw new InvalidPostException("The post message is too long! (>100 characters)");
 		} else if (message.length() < 1) {
-			throw new InvalidPostException("The Post message is too short.");
+			throw new InvalidPostException("The post message is too short! (Must be at least 2 characters)");
 		}
 
 		Post newPost = account.createPost(message, account);
@@ -196,25 +215,25 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Checks to see if the account exists
 		Account account = null;
-		for (int i=0; i<accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
 				account = accounts.get(i);
 				break;
 			}
 		}
 		if (account == null) {
-			throw new HandleNotRecognisedException("The Account doesn't exist.");
+			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		}
 		else {
 			// Checks to see if the post exists
-			for (int i=0; i<posts.size(); i++) {
+			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
 					// Creating New comment and adding it to the list of comments linked to the post
-					Endorsement newEndorsement = account.createEndorsement(id, account);
+					Endorsement newEndorsement = account.createEndorsement(posts.get(i), account);
 					return newEndorsement.getIdentifier();
 				}
 			}
-			throw new PostIDNotRecognisedException("The Post doesn't exist.");
+			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 			}
 	}
 
@@ -224,26 +243,26 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Checks to see if the account exists
 		Account account = null;
-		for (int i = 0; i < accounts.size(); i++) {
+		for (int i=0; i < accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
 				account = accounts.get(i);
 				break;
 			}
 		}
 		if (account == null) {
-			throw new HandleNotRecognisedException("The Account doesn't exist.");
+			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		} else {
 			// Checks to see if the post exists
-			for (int i = 0; i < posts.size(); i++) {
+			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
 
 					// Creating New comment by using the function in Account
-					Comment newComment = account.createComment(id, message, account);
+					Comment newComment = account.createComment(posts.get(i), message, account);
 					// Returning the ID of the new comment
 					return newComment.getIdentifier();
 				}
 			}
-			throw new PostIDNotRecognisedException("The Post doesn't exist.");
+			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
 	}
 
@@ -253,40 +272,40 @@ public class SocialMedia implements SocialMediaPlatform {
 		Post post = null;
 
 		// Search through the list of post objects.
-		for (int i = 0; i < this.posts.size(); i++)
+		for (int i=0; i < posts.size(); i++)
 			if (posts.get(i).getIdentifier() == id) {
-				// New empty post is created that is a placeholder for the comments of the original list
-				Post emptypPost = new Post(null, "The original content was removed from the system and is no longer available.");
-				// The empty lists comments may still need to be accessed, so the object location is saved
-				emptyPosts.add(emptypPost);
-
-				// The post is then deleted loosing the location of the original post and all of its endorsements
-				posts.get(i).deletePost(emptypPost.getIdentifier());
-				posts.remove(posts.get(i).getIdentifier() - 1);
 				post = posts.get(i);
 				break;
 			}
 
 		if (post == null) {
-			throw new PostIDNotRecognisedException("The Post ID was not found.");
+			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
+
+		// New empty post is created that is a placeholder for the comments of the original list
+		Post emptyPost = new Post(null, "The original content was removed from the system and is no longer available.");
+		// The empty lists comments may still need to be accessed, so the object location is saved
+		emptyPosts.add(emptyPost);
+
+		// The post is then deleted loosing the location of the original post and all of its endorsements
+		post.deletePost(emptyPost.getIdentifier());
+		posts.remove(post.getIdentifier() - 1);
 
 	}
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		Post post = null;
-
 		// Search through the list of post objects.
-		for (int i = 0; i < this.posts.size(); i++) {
+		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
-				post = posts.get(i);
-				StringBuilder postInfo = post.getPostInfo();
+				Post post = posts.get(i);
+				StringBuilder postInfo = post.getInfo();
 				return postInfo.toString();
 			}
 		}
 
-		throw new PostIDNotRecognisedException("The Post ID was not found.");
+		// Throw PostIDNotRecognisedException if no post found matching given id
+		throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 	}
 
 	@Override
@@ -303,32 +322,74 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getTotalOriginalPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		for (int i=0; i < posts.size(); i++) {
+			if (posts.get(i) instanceof Post) {
+				count += 1;
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public int getTotalEndorsmentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		for (int i=0; i < posts.size(); i++) {
+			if (posts.get(i) instanceof Endorsement) {
+				count += 1;
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public int getTotalCommentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		for (int i=0; i < posts.size(); i++) {
+			if (posts.get(i) instanceof Comment) {
+				count += 1;
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public int getMostEndorsedPost() {
-		// TODO Auto-generated method stub
-		return 0;
+		Post topPost = null;
+		int topCount = 0;
+		
+		for (int i=0; i < posts.size(); i++) {
+			ArrayList<Endorsement> endorsements = posts.get(i).getEndorsements();
+			if (endorsements.size() >= topCount) {
+				topPost = posts.get(i);
+				topCount = endorsements.size();
+			}
+		}
+
+		if (topPost == null) {
+			return 0;
+		} else {
+			return topPost.getIdentifier();
+		}
 	}
 
 	@Override
 	public int getMostEndorsedAccount() {
-		// TODO Auto-generated method stub
-		return 0;
+		Account topAccount = null;
+		int topCount = 0;
+		
+		for (int i=0; i < accounts.size(); i++) {
+			if (accounts.get(i).getTotalEndorsments() >= topCount) {
+				topAccount = accounts.get(i);
+				topCount = topAccount.getTotalEndorsments();
+			}
+		}
+
+		if (topAccount == null) {
+			return 0;
+		} else {
+			return topAccount.getIdentifier();
+		}
 	}
 
 	@Override

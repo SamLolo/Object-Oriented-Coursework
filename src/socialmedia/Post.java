@@ -7,19 +7,19 @@ public class Post {
     private static int count = 0;
     private int identifier;
     private String message;
-    private Account authorObject;
+    private Account author;
     private ArrayList<Comment> comments = new ArrayList<>();
     private ArrayList<Endorsement> endorsements = new ArrayList<>();
 
     public String toString() {
-        return "Post[id="+identifier+", Message="+message+", Author Handle="+authorObject.getHandle()+"]";
+        return "Post[id="+identifier+", Message="+message+", Author="+author.getHandle()+"]";
     }
 
     // Overloaded Constructors (To be continued)
     public Post(Account account, String message) {
         this.identifier = ++count;
         this.message = message;
-        this.authorObject = account;
+        this.author = account;
     }
 
     public int getIdentifier() {
@@ -27,15 +27,15 @@ public class Post {
     }
 
     public String getAuthorHandle() {
-        return authorObject.getHandle();
+        return author.getHandle();
     }
 
-    public int getNOEndorsements() {
-        return endorsements.size();
+    public ArrayList<Endorsement> getEndorsements() {
+        return endorsements;
     }
 
-    public int getNOComments() {
-        return comments.size();
+    public ArrayList<Comment> getComments() {
+        return comments;
     }
 
     public String getMessage() {
@@ -60,13 +60,13 @@ public class Post {
         comments.add(comment);
     }
 
-    public StringBuilder getPostInfo() {
-        StringBuilder postInfo = new StringBuilder();
-        postInfo.append("Id: ").append(identifier);
-        postInfo.append("\nAccount: ").append(authorObject.getHandle());
-        postInfo.append("\nNO. endorsements: ").append(endorsements.size());
-        postInfo.append("  |  NO. comments: ").append(comments.size());
-        postInfo.append("\n").append(message);
-        return postInfo;
+    public StringBuilder getInfo() {
+        StringBuilder info = new StringBuilder();
+        info.append("ID: ").append(identifier);
+        info.append("\nAccount: ").append(author.getHandle());
+        info.append("\nNo. endorsements: ").append(endorsements.size());
+        info.append(" | No. comments: ").append(comments.size());
+        info.append("\n").append(message);
+        return info;
     }
 }
