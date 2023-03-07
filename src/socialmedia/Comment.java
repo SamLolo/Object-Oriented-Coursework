@@ -1,19 +1,20 @@
 package socialmedia;
 
-public class Comment extends Post{
+public class Comment extends Post {
 
     private int originalPostID;
-
-    public String toString() {
-        return "Comment[id="+getIdentifier()+", Message="+getMessage()+", Author Handle="+getAuthorHandle()+", Original Post ID="+originalPostID+"]";
-    }
 
     public Comment(int id, String message, Account account) {
         super(account, message);
         this.originalPostID = id;
     }
 
-    public void setOriginalID(int newId) {
-        originalPostID = newId;
+    @Override
+    public String toString() {
+        return "Comment[id="+identifier+", Message="+message+", Author="+author.getHandle()+", Original_Post_ID="+originalPostID+"]";
+    }
+
+    public void removeOriginalPost() {
+        originalPostID = -1;
     }
 }

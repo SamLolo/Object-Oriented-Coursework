@@ -1,6 +1,7 @@
 package socialmedia;
 
-public class Endorsement extends Post{
+public class Endorsement extends Post {
+    
     private int originalPostID;
 
     public Endorsement(Account account, int id, String message) {
@@ -8,11 +9,8 @@ public class Endorsement extends Post{
         this.originalPostID = id;
     }
 
+    @Override
     public String toString() {
-        return "Endorsement[id=" + getIdentifier() + ", Message=" + getMessage() + ", Author Handle=" + getAuthorHandle()+ ", Original Post ID=" + originalPostID + "]";
-    }
-
-    public void setOriginalIDtoNull() {
-        originalPostID = -1;
+        return "Endorsement[id="+identifier+", Message="+message+", Author="+author.getHandle()+", Original_Post_ID="+originalPostID+"]";
     }
 }

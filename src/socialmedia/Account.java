@@ -40,6 +40,15 @@ public class Account {
         description = d;
     }
 
+    public void deletePost(int id) {
+        for (int i=0; i < posts.size(); i++) {
+            if (posts.get(i).getIdentifier() == id) {
+                posts.remove(i);
+                break;
+            }
+        }
+    }
+
     // Method: Get Posts
     public ArrayList<Post> getPosts() {
         return posts;

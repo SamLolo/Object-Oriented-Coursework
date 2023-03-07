@@ -1,13 +1,14 @@
 package socialmedia;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Post {
     // Private Attribute
     private static int count = 0;
-    private int identifier;
-    private String message;
-    private Account author;
+    protected int identifier;
+    protected String message;
+    protected Account author;
     private ArrayList<Comment> comments = new ArrayList<>();
     private ArrayList<Endorsement> endorsements = new ArrayList<>();
 
@@ -26,8 +27,8 @@ public class Post {
         return identifier;
     }
 
-    public String getAuthorHandle() {
-        return author.getHandle();
+    public Account getAuthor() {
+        return author;
     }
 
     public ArrayList<Endorsement> getEndorsements() {
@@ -42,14 +43,14 @@ public class Post {
         return message;
     }
 
-    // Sets original post id to null as the original post has been deleted
-    public void deletePost(int newId) {
+    public void delete() {
         for (int i = 0; i < comments.size(); i++) {
-            comments.get(i).setOriginalID(newId);
+            comments.get(i).removeOriginalPost();
         }
-        for (int i = 0; i < endorsements.size(); i++) {
-            endorsements.get(i).setOriginalIDtoNull();
-        }
+        endorsements.clear();
+        author.deletePost(identifier);
+        author = null;
+        message = "The original content was removed from the system and is no longer available.";
     }
 
     public void addEndorsement(Endorsement endorsement) {

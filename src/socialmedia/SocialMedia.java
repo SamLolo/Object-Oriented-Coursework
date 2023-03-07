@@ -12,10 +12,9 @@ import java.util.Objects;
  * @version 1.0
  */
 public class SocialMedia implements SocialMediaPlatform {
-	// 3 Private Attributes
+	// 2 Private Attributes
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ArrayList<Post> posts = new ArrayList<>();
-	private ArrayList<Post> emptyPosts = new ArrayList<>();
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -86,8 +85,15 @@ public class SocialMedia implements SocialMediaPlatform {
 		ArrayList<Post> accountPosts = account.getPosts();
 		for (int i=0; i < accountPosts.size(); i++) {
 			Post post = accountPosts.get(i);
-			post.deletePost(0);
-			posts.remove(post.getIdentifier() - 1);
+			post.delete();
+
+			int postID = post.getIdentifier();
+			for (int j=0; j < posts.size(); j++) {
+				if (posts.get(j).getIdentifier() == postID) {
+					posts.remove(j);
+					break;
+				}
+			}
 		}
 	}
 
@@ -110,8 +116,15 @@ public class SocialMedia implements SocialMediaPlatform {
 		ArrayList<Post> posts = account.getPosts();
 		for (int i=0; i < posts.size(); i++) {
 			Post post = posts.get(i);
-			post.deletePost(0);
-			posts.remove(post.getIdentifier() - 1);
+			post.delete();
+			
+			int postID = post.getIdentifier();
+			for (int j=0; j < posts.size(); j++) {
+				if (posts.get(j).getIdentifier() == postID) {
+					posts.remove(j);
+					break;
+				}
+			}
 		}
 
 	}
@@ -201,7 +214,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		if (message.length() > 100) {
 			throw new InvalidPostException("The post message is too long! (>100 characters)");
 		} else if (message.length() < 1) {
-			throw new InvalidPostException("The post message is too short! (Must be at least 2 characters)");
+			throw new InvalidPostException("The post message is too short! (Cannot be empty!)");
 		}
 
 		Post newPost = account.createPost(message, account);
@@ -230,6 +243,7 @@ public class SocialMedia implements SocialMediaPlatform {
 				if (posts.get(i).getIdentifier() == id) {
 					// Creating New comment and adding it to the list of comments linked to the post
 					Endorsement newEndorsement = account.createEndorsement(posts.get(i), account);
+					posts.add(newEndorsement);
 					return newEndorsement.getIdentifier();
 				}
 			}
@@ -258,6 +272,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 					// Creating New comment by using the function in Account
 					Comment newComment = account.createComment(posts.get(i), message, account);
+					posts.add(newComment);
 					// Returning the ID of the new comment
 					return newComment.getIdentifier();
 				}
@@ -281,16 +296,26 @@ public class SocialMedia implements SocialMediaPlatform {
 		if (post == null) {
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
-
-		// New empty post is created that is a placeholder for the comments of the original list
-		Post emptyPost = new Post(null, "The original content was removed from the system and is no longer available.");
-		// The empty lists comments may still need to be accessed, so the object location is saved
-		emptyPosts.add(emptyPost);
+		
+		ArrayList<Endorsement> endorsements = post.getEndorsements();
+		for (int i=0; i < endorsements.size(); i++) {
+			int endorsementID = endorsements.get(i).getIdentifier();
+			for (int j=0; j < posts.size(); j++) {
+				if (posts.get(j).getIdentifier() == endorsementID) {
+					posts.remove(j);
+					break;
+				}
+			}
+		}
 
 		// The post is then deleted loosing the location of the original post and all of its endorsements
-		post.deletePost(emptyPost.getIdentifier());
-		posts.remove(post.getIdentifier() - 1);
-
+		post.delete();
+		for (int i=0; i < posts.size(); i++) {
+			if (posts.get(i).getIdentifier() == id) {
+				posts.remove(i);
+				break;
+			}
+		}
 	}
 
 	@Override
