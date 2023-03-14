@@ -60,19 +60,19 @@ public class Post {
         comments.add(comment);
     }
 
-    public StringBuilder getInfo(String indent) {
+    public StringBuilder getInfo() {
         StringBuilder info = new StringBuilder();
         info.append("ID: ").append(identifier);
-        info.append("\n" + indent + "Account: ").append(author.getHandle());
-        info.append("\n" + indent +"No. endorsements: ").append(endorsements.size());
+        info.append("\nAccount: ").append(author.getHandle());
+        info.append("\nNo. endorsements: ").append(endorsements.size());
         info.append(" | No. comments: ").append(comments.size());
-        info.append("\n" + indent).append(message);
+        info.append("\n").append(message);
         return info;
     }
     public StringBuilder getChildInfo(StringBuilder postInfo) {
         if (comments.size() > 0) {
             for (int j=0; j < comments.size(); j++) {
-                postInfo.append("\n| \n| > " + comments.get(j).getInfo("    "));
+                postInfo.append("\n| \n| > " + comments.get(j).getInfo());
                 comments.get(j).getChildInfo(postInfo);
             }
         }

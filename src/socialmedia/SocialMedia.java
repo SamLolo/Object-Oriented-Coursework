@@ -324,7 +324,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
 				Post post = posts.get(i);
-				StringBuilder postInfo = post.getInfo("");
+				StringBuilder postInfo = post.getInfo();
 				return postInfo.toString();
 			}
 		}
@@ -338,11 +338,11 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
 				Post post = posts.get(i);
-				StringBuilder postInfo = post.getInfo("");
+				StringBuilder postInfo = post.getInfo();
 				posts.get(i).getChildInfo(postInfo);
+				return postInfo;
 					}
 				}
-		return postInfo;
 
 		// Throw PostIDNotRecognisedException if no post found matching given id
 		throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
