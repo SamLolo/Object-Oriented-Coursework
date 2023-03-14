@@ -57,16 +57,15 @@ public class SocialMediaPlatformTestApp {
 		platform.createAccount("handle");
 
 		int id = platform.createPost("handle", "message");
-		System.out.println(id);
-		System.out.println(platform.showIndividualPost(id));
 
 		platform.endorsePost("handle", id);
 		platform.commentPost("handle", id, "hello");
-		platform.commentPost("handle", id, "hellos");
+		platform.commentPost("handle", 3, "hellos");
 		platform.endorsePost("handle", id);
 
-		System.out.println(platform.showIndividualPost(id));
-
+		System.out.println("----------------------");
+		System.out.println(platform.showPostChildrenDetails(id));
+		System.out.println("----------------------");
 
 	}
 }
