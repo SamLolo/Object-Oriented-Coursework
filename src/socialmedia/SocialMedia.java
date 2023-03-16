@@ -324,7 +324,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
 				Post post = posts.get(i);
-				StringBuilder postInfo = post.getInfo();
+				StringBuilder postInfo = post.getInfo(0);
 				return postInfo.toString();
 			}
 		}
@@ -335,17 +335,26 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
+		Post post = null;
+		ArrayList<Comment> comments = null;
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
-				Post post = posts.get(i);
-				StringBuilder postInfo = post.getInfo();
-				posts.get(i).getChildInfo(postInfo);
-				return postInfo;
-					}
-				}
+				post = posts.get(i);
+				comments = post.getComments();
+				break;
+			}
+		}
 
 		// Throw PostIDNotRecognisedException if no post found matching given id
-		throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
+		if (post == null) {
+			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
+		}
+
+		StringBuilder details = post.getInfo(0);
+		for (Comment comment: comments) {
+			details.append(comment.getChildInfo(null, 0));
+		}
+		return details;
 	}
 
 
