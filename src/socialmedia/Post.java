@@ -16,6 +16,10 @@ public class Post {
         return "Post[id="+identifier+", Message="+message+", Author="+author.getHandle()+"]";
     }
 
+    public static void setCount(int n) {
+        count = n;
+    }
+
     // Overloaded Constructors (To be continued)
     public Post(Account account, String message) {
         this.identifier = ++count;
@@ -72,7 +76,7 @@ public class Post {
         info.append("ID: ").append(identifier);
         info.append(indentation).append("\nAccount: ").append(author.getHandle());
         info.append(indentation).append("\nNo. endorsements: ").append(endorsements.size());
-        info.append(indentation).append(" | No. comments: ").append(comments.size());
+        info.append(" | No. comments: ").append(comments.size());
         info.append(indentation).append("\n").append(message);
         return info;
     }

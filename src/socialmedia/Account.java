@@ -31,6 +31,10 @@ public class Account {
         return "Account[id="+identifier+", handle="+handle+", description="+description+"]";
     }
 
+    public static void setCount(int n) {
+        count = n;
+    }
+
     /**
 	 * The method gets the value of the private int identifier for the class.
 	 * 

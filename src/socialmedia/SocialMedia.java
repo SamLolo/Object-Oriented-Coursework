@@ -1,6 +1,10 @@
 package socialmedia;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -352,7 +356,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		StringBuilder details = post.getInfo(0);
 		for (Comment comment: comments) {
-			details.append(comment.getChildInfo(null, 0));
+			details.append(comment.getChildInfo(details, 0));
 		}
 		return details;
 	}
@@ -436,19 +440,48 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void erasePlatform() {
-		// TODO Auto-generated method stub
+		// Reset counters for identifiers in account and post classes
+		Account.setCount(0);
+		Post.setCount(0);
 
+		// Remove all stored posts and accounts from the system
+		accounts.clear();
+		posts.clear();
 	}
 
 	@Override
 	public void savePlatform(String filename) throws IOException {
-		// TODO Auto-generated method stub
+		try {
+			FileOutputStream file = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream (file);
+            
+			out.writeObject(accounts);
+			out.writeObject(posts);
+            
+			out.close();
+			file.close();
+        } catch(IOException e) {
+            throw e;
+        }
 
 	}
 
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		// TODO Auto-generated method stub
+		try {  
+            FileInputStream file = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(file);
+             
+            accounts = (ArrayList<Account>)in.readObject();
+			posts = (ArrayList<Post>)in.readObject();
+             
+            in.close();
+            file.close();
+        } catch(IOException e) {
+            throw e;
+        } catch(ClassNotFoundException e) {
+            throw e;
+        }
 
 	}
 
