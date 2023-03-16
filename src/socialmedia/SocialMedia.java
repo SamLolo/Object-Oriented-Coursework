@@ -357,7 +357,6 @@ public class SocialMedia implements SocialMediaPlatform {
 		return details;
 	}
 
-
 	@Override
 	public int getNumberOfAccounts() {
 		return accounts.size();

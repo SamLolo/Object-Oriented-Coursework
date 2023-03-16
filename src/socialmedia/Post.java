@@ -11,6 +11,7 @@ public class Post {
     private ArrayList<Comment> comments = new ArrayList<>();
     private ArrayList<Endorsement> endorsements = new ArrayList<>();
 
+    @Override
     public String toString() {
         return "Post[id="+identifier+", Message="+message+", Author="+author.getHandle()+"]";
     }
