@@ -1,71 +1,89 @@
+import org.junit.Test;
 import socialmedia.*;
 
-/**
- * A short program to illustrate an app testing some minimal functionality of a
- * concrete implementation of the SocialMediaPlatform interface -- note you will
- * want to increase these checks, and run it on your SocialMedia class (not the
- * BadSocialMedia class).
- *
- * 
- * @author Diogo Pacheco
- * @version 1.0
- */
+import javax.swing.border.CompoundBorder;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class SocialMediaPlatformTestApp {
 
-	/**
-	 * Test method.
-	 * 
-	 * @param args not used
-	 */
-	public static void main(String[] args) throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException, IllegalHandleException, InvalidHandleException, NotActionablePostException {
-		postTesting();
-
-		System.out.println("The system compiled and started the execution...");
-
+	// Tests For create Account:
+	@Test
+	public void InvalidHandleExceptionFromEmptyHandle() {
 		SocialMediaPlatform platform = new SocialMedia();
-
-		assert (platform.getNumberOfAccounts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
-		assert (platform.getTotalOriginalPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
-		assert (platform.getTotalCommentPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
-		assert (platform.getTotalEndorsmentPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
-
-		Integer id;
-		try {
-			id = platform.createAccount("my_handle");
-			assert (platform.getNumberOfAccounts() == 1) : "number of accounts registered in the system does not match";
-
-			platform.removeAccount(id);
-			assert (platform.getNumberOfAccounts() == 0) : "number of accounts registered in the system does not match";
-
-		}
-		catch (IllegalHandleException e) {
-			assert (false) : "IllegalHandleException thrown incorrectly";
-		}
-		catch (InvalidHandleException e) {
-			assert (false) : "InvalidHandleException thrown incorrectly";
-		}
-		catch (AccountIDNotRecognisedException e) {
-			assert (false) : "AccountIDNotRecognizedException thrown incorrectly";
-		}
+		assertThrows(InvalidHandleException.class, () -> {
+			platform.createAccount("");
+		});
 	}
 
-	public static void postTesting() throws InvalidPostException, HandleNotRecognisedException, PostIDNotRecognisedException, IllegalHandleException, InvalidHandleException, NotActionablePostException {
-		System.out.println("The system compiled and started the execution...");
-
+	@Test
+	public void InvalidHandleExceptionFromWhiteSpaces() {
 		SocialMediaPlatform platform = new SocialMedia();
-
-		platform.createAccount("handle");
-
-		int id = platform.createPost("handle", "message");
-
-		platform.endorsePost("handle", id);
-		platform.commentPost("handle", id, "hello");
-		platform.commentPost("handle", 3, "hellos");
-		platform.endorsePost("handle", id);
-
-		System.out.println("----------------------");
-		System.out.println(platform.showPostChildrenDetails(id));
-		System.out.println("----------------------");
-
+		assertThrows(InvalidHandleException.class, () -> {
+			platform.createAccount("Handle Test");
+		});
 	}
+
+	@Test
+	public void InvalidHandleExceptionFromTooLong() {
+		SocialMediaPlatform platform = new SocialMedia();
+		assertThrows(InvalidHandleException.class, () -> {
+			platform.createAccount("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		});
+	}
+
+	@Test
+	public void IllegalHandleExceptionFromHandleAlreadyExisting() {
+		SocialMediaPlatform platform = new SocialMedia();
+		assertThrows(IllegalHandleException.class, () -> {
+			platform.createAccount("Account1");
+			platform.createAccount("Account1");
+		});
+	}
+
+	@Test
+	public void CheckIncrementalId() throws IllegalHandleException, InvalidHandleException {
+		SocialMediaPlatform platform = new SocialMedia();
+		assertEquals (1, platform.createAccount("Account1"));
+		assertEquals (2, platform.createAccount("Account2"));
+		assertEquals (3, platform.createAccount("Account3"));
+		assertEquals (4, platform.createAccount("Account4"));
+	}
+
+
+	// Tests for remove account:
+	@Test
+	public void AccountIDNotRecognisedException() {
+		SocialMediaPlatform platform = new SocialMedia();
+		assertThrows(AccountIDNotRecognisedException.class, () -> {
+			platform.createAccount("Account1");
+			platform.removeAccount(-1);
+		});
+	}
+
+	@Test
+	public void testIfAnAccountIsRemoved() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException {
+		SocialMediaPlatform platform = new SocialMedia();
+		int id = platform.createAccount("Account1");
+		assertEquals(1, platform.getNumberOfAccounts());
+		platform.removeAccount(id);
+		assertEquals(0, platform.getNumberOfAccounts());
+	}
+
+	@Test
+	public void testIfTheCorrectAccountIsRemoved() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException {
+		SocialMediaPlatform platform = new SocialMedia();
+		int id1 = platform.createAccount("Account1");
+		int id2 = platform.createAccount("Account2");
+		int id3 = platform.createAccount("Account3");
+		assertEquals(3, platform.getNumberOfAccounts());
+		platform.removeAccount(id2);
+		assertThrows(HandleNotRecognisedException.class, () -> {
+			platform.showAccount("Account2");
+		});
+		assertEquals(2, platform.getNumberOfAccounts());
+	}
+
+
 }
+

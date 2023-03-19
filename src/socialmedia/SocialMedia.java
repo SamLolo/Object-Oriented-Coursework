@@ -34,7 +34,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		// Check if handle is unique (doesn't already exist)
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
-				throw new InvalidHandleException("Handle '"+handle+"' already exists!");
+				throw new IllegalHandleException("Handle '"+handle+"' already exists!");
 			}
 		}
 
@@ -59,7 +59,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		// Check if handle is unique (doesn't already exist)
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
-				throw new InvalidHandleException("Handle '"+handle+"' already exists!");
+				throw new IllegalHandleException("Handle '"+handle+"' already exists!");
 			}
 		}
 
@@ -77,6 +77,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getIdentifier() == id) {
 				account = accounts.get(i);
+				accounts.remove(i);
 				break;
 			}
 		}
@@ -99,6 +100,7 @@ public class SocialMedia implements SocialMediaPlatform {
 				}
 			}
 		}
+
 	}
 
 	@Override
@@ -108,6 +110,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				account = accounts.get(i);
+				accounts.remove(i);
 				break;
 			}
 		}
@@ -162,7 +165,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		// Check if handle is unique (doesn't already exist)
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == newHandle) {
-				throw new InvalidHandleException("Handle '"+newHandle+"' already exists!");
+				throw new IllegalHandleException("Handle '"+newHandle+"' already exists!");
 			}
 		}
 
