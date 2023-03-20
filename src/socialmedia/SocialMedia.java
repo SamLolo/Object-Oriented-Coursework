@@ -184,6 +184,11 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
+		// Throw HandleNotRecognisedException if account cannot be found with given handle
+		if (account == null) {
+			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
+		}
+
 		// Change account description
 		account.setDescription(description);
 	}
@@ -248,19 +253,32 @@ public class SocialMedia implements SocialMediaPlatform {
 			// Checks to see if the post exists
 			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
+					if (posts.get(i) instanceof Endorsement) {
+						throw new NotActionablePostException("Un-able to endorse a endorsement");
+					} else if (posts.get(i) instanceof Comment) {
+						throw new NotActionablePostException("Un-able to endorse a comment");
+					}
 					// Creating New comment and adding it to the list of comments linked to the post
-					Endorsement newEndorsement = account.createEndorsement(posts.get(i), account);
-					posts.add(newEndorsement);
-					return newEndorsement.getIdentifier();
+						Endorsement newEndorsement = account.createEndorsement(posts.get(i), account);
+						posts.add(newEndorsement);
+						return newEndorsement.getIdentifier();
+					}
 				}
 			}
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
-			}
 	}
+
 
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
+
+		// Checks to see if the post is valid.
+		if (message.length() > 100) {
+			throw new InvalidPostException("The post message is too long! (>100 characters)");
+		} else if (message.length() < 1) {
+			throw new InvalidPostException("The post message is too short! (Cannot be empty!)");
+		}
 
 		// Checks to see if the account exists
 		Account account = null;
@@ -276,7 +294,9 @@ public class SocialMedia implements SocialMediaPlatform {
 			// Checks to see if the post exists
 			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
-
+					if (posts.get(i) instanceof Endorsement) {
+						throw new NotActionablePostException("Un-able to endorse a endorsement");
+					}
 					// Creating New comment by using the function in Account
 					Comment newComment = account.createComment(posts.get(i), message, account);
 					posts.add(newComment);
