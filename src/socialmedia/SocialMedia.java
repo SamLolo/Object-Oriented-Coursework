@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * BadSocialMedia is a minimally compiling, but non-functioning implementor of
- * the SocialMediaPlatform interface.
+ * SocialMedia is an implementor of the SocialMediaPlatform interface.
+ * It provides functionality for handling accounts and posts on the system, as
+ * well as analytics and system management methods.
  * 
  * @author Diogo Pacheco
  * @version 1.0
  */
 public class SocialMedia implements SocialMediaPlatform {
-	// 2 Private Attributes
+	// 2 private attributes to keep track of all active accounts and posts in the system
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ArrayList<Post> posts = new ArrayList<>();
 
@@ -229,7 +230,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("The post message is too short! (Cannot be empty!)");
 		}
 
-		Post newPost = account.createPost(message, account);
+		Post newPost = account.createPost(message);
 		posts.add(newPost);
 		return newPost.getIdentifier();
 	}
@@ -259,7 +260,7 @@ public class SocialMedia implements SocialMediaPlatform {
 						throw new NotActionablePostException("Un-able to endorse a comment");
 					}
 					// Creating New comment and adding it to the list of comments linked to the post
-						Endorsement newEndorsement = account.createEndorsement(posts.get(i), account);
+						Endorsement newEndorsement = account.createEndorsement(posts.get(i));
 						posts.add(newEndorsement);
 						return newEndorsement.getIdentifier();
 					}
@@ -298,7 +299,7 @@ public class SocialMedia implements SocialMediaPlatform {
 						throw new NotActionablePostException("Un-able to endorse a endorsement");
 					}
 					// Creating New comment by using the function in Account
-					Comment newComment = account.createComment(posts.get(i), message, account);
+					Comment newComment = account.createComment(posts.get(i), message);
 					posts.add(newComment);
 					// Returning the ID of the new comment
 					return newComment.getIdentifier();
