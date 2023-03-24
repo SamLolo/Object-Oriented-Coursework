@@ -4,11 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SocialMediaPlatformTestApp {
 	private static SocialMediaPlatform platform = new SocialMedia();
+	private static int count = 1;
+
+	public String getNewAccountHandle(){
+		int temp = count;
+		count += 1;
+		return "Account"+count;
+	}
 
 	// Tests For createAccount:
 	@Test
 	public void createAccount_InvalidHandleExceptionFromEmptyHandle() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
 			platform.createAccount("");
 		});
@@ -16,7 +22,6 @@ public class SocialMediaPlatformTestApp {
 
 	@Test
 	public void createAccount_InvalidHandleExceptionFromWhiteSpaces() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
 			platform.createAccount("Handle Test");
 		});
@@ -24,144 +29,140 @@ public class SocialMediaPlatformTestApp {
 
 	@Test
 	public void createAccount_InvalidHandleExceptionFromTooLong() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
 			platform.createAccount("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		});
 	}
 
 	@Test
-	public void createAccount_IllegalHandleExceptionFromHandleAlreadyExisting() throws HandleNotRecognisedException {
-		platform.erasePlatform();
+	public void createAccount_IllegalHandleExceptionFromHandleAlreadyExisting() {
 		assertThrows(IllegalHandleException.class, () -> {
-			platform.createAccount("Account1");
-			platform.createAccount("Account1");
+			String account = getNewAccountHandle();
+			platform.createAccount(account);
+			platform.createAccount(account);
 		});
 	}
 
 	@Test
-	public void createAccount_CheckIncrementalId() throws IllegalHandleException, InvalidHandleException, HandleNotRecognisedException {
-		platform.erasePlatform();
-		int id1 = platform.createAccount("Account1");
-		assertEquals (id1 + 1, platform.createAccount("Account2"));
-		assertEquals (id1 + 2, platform.createAccount("Account3"));
-		assertEquals (id1 + 3, platform.createAccount("Account4"));
+	public void createAccount_CheckIncrementalId() throws IllegalHandleException, InvalidHandleException {
+		int id1 = platform.createAccount(getNewAccountHandle());
+
+		assertEquals (id1 + 1, platform.createAccount(getNewAccountHandle()));
+		assertEquals (id1 + 2, platform.createAccount(getNewAccountHandle()));
+		assertEquals (id1 + 3, platform.createAccount(getNewAccountHandle()));
 	}
 
 
 	// Tests for removeAccount:
 	@Test
 	public void removeAccount_AccountIDNotRecognisedException() {
-		platform.erasePlatform();
 		assertThrows(AccountIDNotRecognisedException.class, () -> {
-			platform.createAccount("Account1");
+			platform.createAccount(getNewAccountHandle());
 			platform.removeAccount(-1);
 		});
 	}
 
 	@Test
 	public void removeAccount_TestIfAnAccountIsRemoved() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException {
-		platform.erasePlatform();
-		int id = platform.createAccount("Account1");
-		assertEquals(1, platform.getNumberOfAccounts());
+		int id = platform.createAccount(getNewAccountHandle());
+		int numOfAccountsBefore = platform.getNumberOfAccounts();
 		platform.removeAccount(id);
-		assertEquals(0, platform.getNumberOfAccounts());
+		assertEquals(numOfAccountsBefore - 1, platform.getNumberOfAccounts());
 	}
 
 	@Test
-	public void removeAccount_TestIfTheCorrectAccountIsRemoved() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException, HandleNotRecognisedException {
-		platform.erasePlatform();
-		int id1 = platform.createAccount("Account1");
-		int id2 = platform.createAccount("Account2");
-		int id3 = platform.createAccount("Account3");
-		assertEquals(3, platform.getNumberOfAccounts());
+	public void removeAccount_TestIfTheCorrectAccountIsRemoved() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException {
+		int id1 = platform.createAccount(getNewAccountHandle());
+		String account = getNewAccountHandle();
+		int id2 = platform.createAccount(account);
+		int id3 = platform.createAccount(getNewAccountHandle());
+
 		platform.removeAccount(id2);
 		assertThrows(HandleNotRecognisedException.class, () -> {
-			platform.showAccount("Account2");
+			platform.showAccount(account);
 		});
-		assertEquals(2, platform.getNumberOfAccounts());
 	}
 
 	// Tests for changeAccountHandle
 	@Test
 	public void changeAccountHandle_HandleNotRecognisedException() {
-		platform.erasePlatform();
 		assertThrows(HandleNotRecognisedException.class, () -> {
-			platform.createAccount("Account1");
-			platform.changeAccountHandle("Account2", "NewAccount1");
+			platform.createAccount(getNewAccountHandle());
+			platform.changeAccountHandle(getNewAccountHandle(), "New"+getNewAccountHandle());
 		});
 	}
 
 	@Test
 	public void changeAccountHandle_InvalidNewHandleExceptionFromEmptyHandle() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
-			platform.createAccount("Account1");
-			platform.changeAccountHandle("Account1", "");
+			String account = getNewAccountHandle();
+			platform.createAccount(account);
+			platform.changeAccountHandle(account, "");
 		});
 	}
 
 	@Test
 	public void changeAccountHandle_InvalidNewHandleExceptionFromWhiteSpaces() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
-			platform.createAccount("Account1");
-			platform.changeAccountHandle("Account1", "Handle Test");
+			String account = getNewAccountHandle();
+			platform.createAccount(account);
+			platform.changeAccountHandle(account, "Handle Test");
 		});
 	}
 
 	@Test
 	public void changeAccountHandle_InvalidNewHandleExceptionFromTooLong() {
-		platform.erasePlatform();
 		assertThrows(InvalidHandleException.class, () -> {
-			platform.createAccount("Account1");
-			platform.changeAccountHandle("Account1", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			String account = getNewAccountHandle();
+			platform.createAccount(account);
+			platform.changeAccountHandle(account, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		});
 	}
 
 	@Test
 	public void changeAccountHandle_TestIfAccountIsChanged() throws IllegalHandleException, InvalidHandleException, HandleNotRecognisedException {
-		platform.erasePlatform();
-		int id1 = platform.createAccount("Account1");
-		assertEquals("ID: "+id1+"\nHandle: Account1\nDescription: \nPost count: 0\nEndorse count: 0", platform.showAccount("Account1"));
-		platform.changeAccountHandle("Account1", "Account2");
-		assertEquals("ID: "+id1+"\nHandle: Account2\nDescription: \nPost count: 0\nEndorse count: 0", platform.showAccount("Account2"));
+		String account = getNewAccountHandle();
+		int id1 = platform.createAccount(account);
+		assertEquals("ID: "+id1+"\nHandle: "+account+"\nDescription: \nPost count: 0\nEndorse count: 0", platform.showAccount(account));
+
+		String newAccount = "new"+getNewAccountHandle();
+		platform.changeAccountHandle(account, newAccount);
+		assertEquals("ID: "+id1+"\nHandle: "+newAccount+"\nDescription: \nPost count: 0\nEndorse count: 0", platform.showAccount(newAccount));
 	}
 
 	//Tests for updateAccountDescription
 	@Test
 	public void updateAccountDescription_HandleNotRecognisedException(){
-		platform.erasePlatform();
 		assertThrows(HandleNotRecognisedException.class, () -> {
-			platform.createAccount("Account1");
-			platform.updateAccountDescription("Account2", "NewAccount1");
+			platform.createAccount(getNewAccountHandle());
+			platform.updateAccountDescription(getNewAccountHandle(), "null");
 		});
 	}
 
 	@Test
 	public void updateAccountDescription_TestIfDescriptionIsChanged() throws IllegalHandleException, InvalidHandleException, HandleNotRecognisedException {
-		platform.erasePlatform();
-		int id1 = platform.createAccount("Account1", "Old Description");
-		assertEquals("ID: "+id1+"\nHandle: Account1\nDescription: Old Description\nPost count: 0\nEndorse count: 0", platform.showAccount("Account1"));
-		platform.updateAccountDescription("Account1", "New Description");
-		assertEquals("ID: "+id1+"\nHandle: Account1\nDescription: New Description\nPost count: 0\nEndorse count: 0", platform.showAccount("Account1"));
+		String account = getNewAccountHandle();
+		int id1 = platform.createAccount(account, "This is a fun description.");
+		assertEquals("ID: "+id1+"\nHandle: "+account+"\nDescription: This is a fun description.\nPost count: 0\nEndorse count: 0", platform.showAccount(account));
+
+		platform.updateAccountDescription(account, "This is a bad description.");
+		assertEquals("ID: "+id1+"\nHandle: "+account+"\nDescription: This is a bad description.\nPost count: 0\nEndorse count: 0", platform.showAccount(account));
 	}
 
 	//Tests for showAccount
 	@Test
 	public void showAccount_HandleNotRecognisedException(){
-		platform.erasePlatform();
 		assertThrows(HandleNotRecognisedException.class, () -> {
-			platform.createAccount("Account1");
-			platform.showAccount("Account2");
+			platform.createAccount(getNewAccountHandle());
+			platform.showAccount(getNewAccountHandle());
 		});
 	}
 
 	@Test
 	public void showAccount_TestIfAccountIsShown() throws IllegalHandleException, InvalidHandleException, HandleNotRecognisedException {
-		platform.erasePlatform();
-		int id1 = platform.createAccount("Account1", "Old Description");
-		assertEquals("ID: "+id1+"\nHandle: Account1\nDescription: Old Description\nPost count: 0\nEndorse count: 0", platform.showAccount("Account1"));
+		String account = getNewAccountHandle();
+		int id1 = platform.createAccount(account, "Old Description");
+		assertEquals("ID: "+id1+"\nHandle: "+account+"\nDescription: Old Description\nPost count: 0\nEndorse count: 0", platform.showAccount(account));
 	}
 
 	//Tests for createPost
