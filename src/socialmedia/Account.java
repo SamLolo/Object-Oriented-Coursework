@@ -36,8 +36,8 @@ public class Account {
 	 * The method sets the account class's counter to the given n value, meaning future
      * identifiers will be set as n+1, and so on
      * <p>
-     * Using n=0 is the same as reseting the counter as if no accounts exists
-     * Must be careful not to duplicate identifiers when using this method!
+     * Using n=0 is the same as reseting the counter as if no accounts exist
+     * Therefore you must be careful not to duplicate identifiers when using this method!
 	 * 
 	 * @param n the number to start setting new identifers from
 	 */

@@ -2,29 +2,60 @@ package socialmedia;
 
 import java.util.ArrayList;
 
+/**
+ * Post class representing a post within the system. Each post is associated with
+ * an account that owns the post. Posts have incremental, unique identifiers, starting
+ * from 1, and keep track of their comments and endorsements.
+ * 
+ * @version 1.0
+ *
+ */
 public class Post {
-    // Private Attribute
+    // Static count to keep track of highest identifier
     private static int count = 0;
+    // 3 protected attributes to be accessed by comment/endorsement classes
     protected int identifier;
     protected String message;
     protected Account author;
+    // 2 private attributes that aren't accessible from comment/endorsement classes
     private ArrayList<Comment> comments = new ArrayList<>();
     private ArrayList<Endorsement> endorsements = new ArrayList<>();
 
+    /**
+	 * Constructs a new post on the system, associated with the given account.
+     * <p>
+     * Assumes the message is a valid string
+     * 
+     * @param message the message to be used on the comment
+     * @param account the author of the comment
+	 */
+    public Post(Account account, String message) {
+        this.identifier = ++count;
+        this.message = message;
+        this.author = account;
+    }
+
+    /**
+	 * The method creates a string showing clearly the state of the attributes of the post class.
+	 * 
+	 * @return a String detailing posts attributes.
+	 */
     @Override
     public String toString() {
         return "Post[id="+identifier+", Message="+message+", Author="+author.getHandle()+"]";
     }
 
+    /**
+	 * The method sets the post class's counter to the given n value, meaning future
+     * identifiers will be set as n+1, and so on
+     * <p>
+     * Using n=0 is the same as reseting the counter as if no posts exist yet
+     * Therfore you must be careful not to duplicate identifiers when using this method!
+	 * 
+	 * @param n the number to start setting new identifers from
+	 */
     public static void setCount(int n) {
         count = n;
-    }
-
-    // Overloaded Constructors (To be continued)
-    public Post(Account account, String message) {
-        this.identifier = ++count;
-        this.message = message;
-        this.author = account;
     }
 
     public int getIdentifier() {
