@@ -236,8 +236,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public int endorsePost(String handle, int id)
-			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 
 		// Checks to see if the account exists
 		Account account = null;
@@ -271,8 +270,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 
 	@Override
-	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
-			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
+	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
 
 		// Checks to see if the post is valid.
 		if (message.length() > 100) {
