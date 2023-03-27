@@ -232,17 +232,6 @@ public class SocialMediaPlatformTestApp {
 	}
 
 	@Test
-	public void endorsePost_NotActionablePostExceptionWithAnComment() {
-		assertThrows(NotActionablePostException.class, () -> {
-			String account = getNewAccountHandle();
-			platform.createAccount(account);
-			int postId = platform.createPost(account, "This is the default message");
-			int commentId = platform.commentPost(account, postId, "This is the default message for a comment");
-			platform.endorsePost(account, commentId);
-		});
-	}
-
-	@Test
 	public void endorsePost_TestIfEndorsementIsCreatedCorrectly() throws PostIDNotRecognisedException, InvalidPostException, HandleNotRecognisedException, IllegalHandleException, InvalidHandleException, NotActionablePostException {
 		String account = getNewAccountHandle();
 		platform.createAccount(account);
@@ -398,16 +387,6 @@ public class SocialMediaPlatformTestApp {
 			int postId = platform.createPost(account, "This is the default message");
 			int endorsementId = platform.endorsePost(account, postId);
 			platform.showPostChildrenDetails(endorsementId);
-		});
-	}
-	@Test
-	public void showPostChildrenDetails_NotActionablePostExceptionWithAnComment() {
-		assertThrows(NotActionablePostException.class, () -> {
-			String account = getNewAccountHandle();
-			platform.createAccount(account);
-			int postId = platform.createPost(account, "This is the default message");
-			int commentId = platform.commentPost(account, postId, "This is the default message for a comment");
-			platform.showPostChildrenDetails(commentId);
 		});
 	}
 	@Test

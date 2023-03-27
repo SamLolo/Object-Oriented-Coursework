@@ -70,10 +70,6 @@ public class Post {
         return endorsements;
     }
 
-    public ArrayList<Comment> getComments() {
-        return comments;
-    }
-
     public String getMessage() {
         return message;
     }
