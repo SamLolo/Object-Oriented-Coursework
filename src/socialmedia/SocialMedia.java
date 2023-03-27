@@ -474,37 +474,52 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public void savePlatform(String filename) throws IOException {
 		try {
+			// Create ObjectOutputStream for given filepath (creates file if one not found)
 			FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream (file);
             
+			// Write accounts and posts arrays into file
 			out.writeObject(accounts);
 			out.writeObject(posts);
             
+			// Properly close output streams once finished
 			out.close();
 			file.close();
+
+		// Pass through exceptions if thrown during file write process
         } catch(IOException e) {
             throw e;
         }
-
 	}
 
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
 		try {  
+			// Create ObjectInputStream for given filename
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(file);
              
+			// Load accounts and posts array objects from serialised file
             accounts = (ArrayList<Account>)in.readObject();
 			posts = (ArrayList<Post>)in.readObject();
-             
+
+			// Set the count in Account & Post classes to largest current identifier just loaded
+            Account lastAccount = accounts.get(accounts.size() - 1);
+			Account.setCount(lastAccount.getIdentifier());
+
+			Post lastPost = posts.get(posts.size() - 1);
+			Post.setCount(lastPost.getIdentifier());
+			
+			// Properly close input streams once finished
             in.close();
             file.close();
+
+		// Pass through exceptions if thrown during file read process
         } catch(IOException e) {
             throw e;
         } catch(ClassNotFoundException e) {
             throw e;
         }
-
 	}
 
 }

@@ -1,6 +1,7 @@
 package socialmedia;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
 
 /**
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @version 1.0
  *
  */
-public class Account {
+public class Account implements Serializable {
     // Static count to keep track of highest identifier
     private static int count = 0;
     // 4 private attributes
