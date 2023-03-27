@@ -255,8 +255,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				if (posts.get(i).getIdentifier() == id) {
 					if (posts.get(i) instanceof Endorsement) {
 						throw new NotActionablePostException("Un-able to endorse a endorsement");
-					} else if (posts.get(i) instanceof Comment) {
-						throw new NotActionablePostException("Un-able to endorse a comment");
 					}
 					// Creating New comment and adding it to the list of comments linked to the post
 						Endorsement newEndorsement = account.createEndorsement(posts.get(i));
@@ -267,7 +265,6 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 	}
-
 
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
@@ -334,7 +331,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
-		// The post is then deleted loosing the location of the original post and all of its endorsements
+		// The post is then deleted losing the location of the original post and all of its endorsements
 		post.delete();
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
@@ -362,12 +359,15 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
 		Post post = null;
-		ArrayList<Comment> comments = null;
+
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
-				post = posts.get(i);
-				comments = post.getComments();
-				break;
+				if (posts.get(i) instanceof Endorsement) {
+					throw new NotActionablePostException("Un-able to showPostChildrenDetails of a endorsement");
+				} else {
+					post = posts.get(i);
+					break;
+				}
 			}
 		}
 
@@ -376,10 +376,8 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
 
-		StringBuilder details = post.getInfo(0);
-		for (Comment comment: comments) {
-			details.append(comment.getChildInfo(details, 0));
-		}
+		StringBuilder details = new StringBuilder();
+		post.getChildInfo(details, 0);
 		return details;
 	}
 

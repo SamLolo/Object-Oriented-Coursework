@@ -100,32 +100,37 @@ public class Post {
         // Create Indentation String
         String indentation = "";
         for (int i=0; i<indent; i++) {
-            indentation += "    ";
+            indentation += "        ";
         }
 
         StringBuilder info = new StringBuilder();
         info.append("ID: ").append(identifier);
-        info.append(indentation).append("\nAccount: ").append(author.getHandle());
-        info.append(indentation).append("\nNo. endorsements: ").append(endorsements.size());
+        info.append("\n").append(indentation).append("Account: ").append(author.getHandle());
+        info.append("\n").append(indentation).append("No. endorsements: ").append(endorsements.size());
         info.append(" | No. comments: ").append(comments.size());
-        info.append(indentation).append("\n").append(message);
+        info.append("\n").append(indentation).append(message);
         return info;
     }
 
-    public StringBuilder getChildInfo(StringBuilder postInfo, int indent) {
+    public void getChildInfo(StringBuilder postInfo, int indent) {
         // Create Indentation String
         String indentation = "";
         for (int i=0; i<indent; i++) {
             indentation += "    ";
         }
 
+        if (indent != 0) {
+            postInfo.append("\n").append(indentation).append("|").append("\n").append(indentation).append("| > ").append(getInfo(indent));
+        } else {
+            postInfo.append(getInfo(indent));
+        }
+
+        ++indent;
         if (comments.size() > 0) {
             for (int j=0; j < comments.size(); j++) {
-                ++indent;
-                postInfo.append(indentation+"\n|"+indentation+"\n| > " + comments.get(j).getInfo(indent));
                 comments.get(j).getChildInfo(postInfo, indent);
             }
         }
-        return postInfo;
+        --indent;
     }
 }
