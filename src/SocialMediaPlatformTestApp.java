@@ -1,5 +1,8 @@
 import org.junit.Test;
 import socialmedia.*;
+
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SocialMediaPlatformTestApp {
@@ -493,17 +496,24 @@ public class SocialMediaPlatformTestApp {
 		platform.createAccount(account1);
 		int post1Id = platform.createPost(account1, "This is the default message.");
 		platform.endorsePost(account1, post1Id);
-		//platform.endorsePost(account1, post1Id);
-		//platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
 
 		String account2 = getNewAccountHandle();
 		platform.createAccount(account2);
 		int post2Id = platform.createPost(account2, "This is the default message.");
 		platform.endorsePost(account2, post2Id);
 		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
 
 
 		assertEquals(post2Id, platform.getMostEndorsedPost());
+		platform.deletePost(post1Id);
+		platform.deletePost(post2Id);
 	}
 
 	// Tests for getMostEndorsedAccount
@@ -548,6 +558,8 @@ public class SocialMediaPlatformTestApp {
 
 
 		assertEquals(account2Id, platform.getMostEndorsedAccount());
+		platform.deletePost(post1Id);
+		platform.deletePost(post2Id);
 	}
 
 	// Tests for erasePlatform
@@ -573,7 +585,17 @@ public class SocialMediaPlatformTestApp {
 
 	//Tests for savePlatform / LoadPlatform
 	@Test
-	public void savePlatform_loadPlatform_Test() throws IllegalHandleException, InvalidHandleException, NotActionablePostException, PostIDNotRecognisedException, HandleNotRecognisedException, InvalidPostException {
+	public void savePlatform_IOException(){
+	}
+	@Test
+	public void LoadPlatform_IOException(){
+	}
+
+	@Test
+	public void LoadPlatform_ClassNotFound(){
+	}
+	@Test
+	public void savePlatform_loadPlatform_Test() throws IllegalHandleException, InvalidHandleException, NotActionablePostException, PostIDNotRecognisedException, HandleNotRecognisedException, InvalidPostException, IOException, ClassNotFoundException {
 		int numOfAccounts = platform.getNumberOfAccounts();
 		int numOfPosts = platform.getTotalOriginalPosts();
 
@@ -587,11 +609,18 @@ public class SocialMediaPlatformTestApp {
 		assertEquals(numOfAccounts + 1 , platform.getNumberOfAccounts());
 		assertEquals(numOfPosts + 1, platform.getTotalOriginalPosts());
 
-		platform.savePlatform("helle");
+		platform.savePlatform("Test");
 
 		platform.erasePlatform();
 		assertEquals(0 , platform.getNumberOfAccounts());
 		assertEquals(0, platform.getTotalOriginalPosts());
+
+		platform.loadPlatform("Test");
+
+		assertEquals(numOfAccounts + 1 , platform.getNumberOfAccounts());
+		assertEquals(numOfPosts + 1, platform.getTotalOriginalPosts());
+
+
 	}
 }
 
