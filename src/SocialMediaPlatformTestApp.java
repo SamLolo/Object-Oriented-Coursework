@@ -587,6 +587,7 @@ public class SocialMediaPlatformTestApp {
 	@Test
 	public void savePlatform_IOException(){
 	}
+	
 	@Test
 	public void LoadPlatform_IOException(){
 	}
@@ -594,6 +595,7 @@ public class SocialMediaPlatformTestApp {
 	@Test
 	public void LoadPlatform_ClassNotFound(){
 	}
+
 	@Test
 	public void savePlatform_loadPlatform_Test() throws IllegalHandleException, InvalidHandleException, NotActionablePostException, PostIDNotRecognisedException, HandleNotRecognisedException, InvalidPostException, IOException, ClassNotFoundException {
 		int numOfAccounts = platform.getNumberOfAccounts();

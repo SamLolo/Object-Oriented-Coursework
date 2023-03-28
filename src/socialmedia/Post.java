@@ -8,18 +8,35 @@ import java.io.Serializable;
  * an account that owns the post. Posts have incremental, unique identifiers, starting
  * from 1, and keep track of their comments and endorsements.
  * 
+ * @author Sam Townley and Charles Symonds
  * @version 1.0
- *
  */
 public class Post implements Serializable {
-    // Static count to keep track of highest identifier
+    /**
+     * Static count to keep track of highest identifier (or total accounts created)
+     */
     private static int count = 0;
-    // 3 protected attributes to be accessed by comment/endorsement classes
+    /**
+     * Identifier representing the post
+     * <p>
+     * Takes the value of count+1 when new account created
+     */
     protected int identifier;
+    /**
+     * The message content of the post
+     */
     protected String message;
+    /**
+     * The account object representing the author of the post
+     */
     protected Account author;
-    // 2 private attributes that aren't accessible from comment/endorsement classes
+    /**
+     * List of comment objects that the post has recieved
+     */
     private ArrayList<Comment> comments = new ArrayList<>();
+    /**
+     * List of endorsement objects that the post has recieved
+     */
     private ArrayList<Endorsement> endorsements = new ArrayList<>();
 
     /**

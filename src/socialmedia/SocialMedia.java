@@ -17,8 +17,13 @@ import java.util.Objects;
  * @version 1.0
  */
 public class SocialMedia implements SocialMediaPlatform {
-	// 2 private attributes to keep track of all active accounts and posts in the system
+	/**
+	 * List of all active accounts within the system
+	 */
 	private ArrayList<Account> accounts = new ArrayList<>();
+	/**
+	 * List of all posts active within the system (including comments and endorsements)
+	 */
 	private ArrayList<Post> posts = new ArrayList<>();
 
 	@Override

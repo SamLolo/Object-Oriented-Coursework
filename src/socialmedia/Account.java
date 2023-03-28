@@ -11,16 +11,33 @@ import java.io.Serializable;
  * unique.
  * Also provides functionality for managing account's posts within the platform.
  * 
+ * @author Sam Townley and Charles Symonds
  * @version 1.0
- *
  */
 public class Account implements Serializable {
-    // Static count to keep track of highest identifier
+    /**
+     * Static count to keep track of highest identifier (or total accounts created)
+     */
     private static int count = 0;
-    // 4 private attributes
+    /**
+     * Identifer for the account
+     * <p>
+     * Takes the value of count+1 when new account created
+     */
     private int identifier;
+    /**
+     * Unique handle chosen by the account holder to represent their account
+     */
     private String handle;
+    /**
+     * Description chosen by account holder to be displayed with the account.
+     * <p>
+     * Defaults to an empty string 
+     */
     private String description = "";
+    /**
+     * ArrayList keeping track of all Post objects created by the account
+     */
     private ArrayList<Post> posts = new ArrayList<Post>();
 
     /**

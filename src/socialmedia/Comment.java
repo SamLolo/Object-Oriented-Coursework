@@ -5,11 +5,13 @@ package socialmedia;
  * properties. However, a comment also keeps track of the identifier of the original post
  * associated with the comment.
  * 
+ * @author Sam Townley and Charles Symonds
  * @version 1.0
- *
  */
 public class Comment extends Post {
-    // Identifier of post being commented on
+    /**
+     * The identifier of the parent post that this comment belongs to
+     */
     private int originalPostID;
 
     /**

@@ -5,11 +5,13 @@ package socialmedia;
  * the comments and endorsements arrayList will always be empty. Similar to a comment, an 
  * endorsement keeps track of the identifier of the original post associated with the endorsement.
  * 
+ * @author Sam Townley and Charles Symonds
  * @version 1.0
- *
  */
 public class Endorsement extends Post {
-    // Identifier of post being endorsed
+    /**
+     * The identifier of the parent post thats being endorsed
+     */
     private int originalPostID;
 
     /**
