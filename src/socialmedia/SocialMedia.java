@@ -88,6 +88,7 @@ public class SocialMedia implements SocialMediaPlatform {
             throw new AccountIDNotRecognisedException("Un-able to find an account with id: "+id+"!");
         }
 
+		// Get all posts associated with account & delete each one
 		ArrayList<Post> accountPosts = account.getPosts();
 		for (int i=0; i < accountPosts.size(); i++) {
 			Post post = accountPosts.get(i);
@@ -121,6 +122,7 @@ public class SocialMedia implements SocialMediaPlatform {
             throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
         }
 
+		// Get all posts associated with account & delete each one
 		ArrayList<Post> posts = account.getPosts();
 		for (int i=0; i < posts.size(); i++) {
 			Post post = posts.get(i);
@@ -169,8 +171,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				throw new IllegalHandleException("Handle '"+newHandle+"' already exists!");
 			}
 		}
-
-		// Change account handle
 		account.setHandle(newHandle);
 	}
 
@@ -189,14 +189,12 @@ public class SocialMedia implements SocialMediaPlatform {
 		if (account == null) {
 			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		}
-
-		// Change account description
 		account.setDescription(description);
 	}
 
 	@Override
 	public String showAccount(String handle) throws HandleNotRecognisedException {
-		// Search through the list of post objects.
+		// Search through the list of post objects, and get post info when account found
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
 				Account account = accounts.get(i);
@@ -211,7 +209,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
-		// Checks to see if the account exists
+		// Get account with given handle
 		Account account = null;
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getHandle() == handle) {
@@ -220,9 +218,11 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 		
+		// Throw HandleNotRecognisedException if account cannot be found with given handle
 		if (account == null) {
 			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		}
+
 		// Checks to see if the post is valid.
 		if (message.length() > 100) {
 			throw new InvalidPostException("The post message is too long! (>100 characters)");
@@ -230,6 +230,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("The post message is too short! (Cannot be empty!)");
 		}
 
+		// Create new post
 		Post newPost = account.createPost(message);
 		posts.add(newPost);
 		return newPost.getIdentifier();
@@ -238,7 +239,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 
-		// Checks to see if the account exists
+		// Get account with given handle
 		Account account = null;
 		for (int i=0; i < accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
@@ -246,23 +247,27 @@ public class SocialMedia implements SocialMediaPlatform {
 				break;
 			}
 		}
+
+		// Throw HandleNotRecognisedException if account cannot be found with given handle
 		if (account == null) {
 			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		}
 		else {
-			// Checks to see if the post exists
+			// Check post is actionable and exists in the system
 			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
 					if (posts.get(i) instanceof Endorsement) {
 						throw new NotActionablePostException("Un-able to endorse a endorsement");
 					}
-					// Creating New comment and adding it to the list of comments linked to the post
-						Endorsement newEndorsement = account.createEndorsement(posts.get(i));
-						posts.add(newEndorsement);
-						return newEndorsement.getIdentifier();
+
+					// Create new endorsement
+					Endorsement newEndorsement = account.createEndorsement(posts.get(i));
+					posts.add(newEndorsement);
+					return newEndorsement.getIdentifier();
 					}
 				}
 			}
+			// Throw PostIDNotRecognisedException if no post found with matching id
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 	}
 
@@ -276,7 +281,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("The post message is too short! (Cannot be empty!)");
 		}
 
-		// Checks to see if the account exists
+		// Get account with given handle
 		Account account = null;
 		for (int i=0; i < accounts.size(); i++) {
 			if (Objects.equals(accounts.get(i).getHandle(), handle)) {
@@ -284,42 +289,44 @@ public class SocialMedia implements SocialMediaPlatform {
 				break;
 			}
 		}
+
+		// Throw HandleNotRecognisedException if account cannot be found with given handle
 		if (account == null) {
 			throw new HandleNotRecognisedException("Un-able to find account with handle: "+handle+"!");
 		} else {
-			// Checks to see if the post exists
+			// Check post is actionable and exists in the system
 			for (int i=0; i < posts.size(); i++) {
 				if (posts.get(i).getIdentifier() == id) {
 					if (posts.get(i) instanceof Endorsement) {
 						throw new NotActionablePostException("Un-able to endorse a endorsement");
 					}
-					// Creating New comment by using the function in Account
+					// Create new comment
 					Comment newComment = account.createComment(posts.get(i), message);
 					posts.add(newComment);
-					// Returning the ID of the new comment
 					return newComment.getIdentifier();
 				}
 			}
+			// Throw PostIDNotRecognisedException if no post found with matching id
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
 	}
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// Check variable as if post ID is not Found it will remain False.
+		// Get post with matching id
 		Post post = null;
-
-		// Search through the list of post objects.
 		for (int i=0; i < posts.size(); i++)
 			if (posts.get(i).getIdentifier() == id) {
 				post = posts.get(i);
 				break;
 			}
 
+		// Throw PostIDNotRecognisedException if no post found with matching id
 		if (post == null) {
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
 		
+		// Go through posts endorsements and remove each of them from the system
 		ArrayList<Endorsement> endorsements = post.getEndorsements();
 		for (int i=0; i < endorsements.size(); i++) {
 			int endorsementID = endorsements.get(i).getIdentifier();
@@ -331,7 +338,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
-		// The post is then deleted losing the location of the original post and all of its endorsements
+		// Tell post to delete and remove it from the system.
 		post.delete();
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
@@ -343,7 +350,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		// Search through the list of post objects.
+		// Find post with matching id and get posts formatted information
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
 				Post post = posts.get(i);
@@ -358,10 +365,12 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
+		// Get post with matching id
 		Post post = null;
-
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i).getIdentifier() == id) {
+
+				// Check if post is actionable, ie: not an endorsement
 				if (posts.get(i) instanceof Endorsement) {
 					throw new NotActionablePostException("Un-able to showPostChildrenDetails of a endorsement");
 				} else {
@@ -376,6 +385,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new PostIDNotRecognisedException("Un-able to find post with id: "+id+"!");
 		}
 
+		// Create string builder by calling recursive child info function of root post
 		StringBuilder details = new StringBuilder();
 		post.getChildInfo(details, 0);
 		return details;
@@ -388,6 +398,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getTotalOriginalPosts() {
+		// Count all posts of type Post (and not comments or endorsements) in posts array
 		int count = 0;
 		for (int i=0; i < posts.size(); i++) {
 			if (!(posts.get(i) instanceof Comment) && !(posts.get(i) instanceof Endorsement)) {
@@ -399,6 +410,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getTotalEndorsmentPosts() {
+		// Count all posts of type Endorsement in posts array
 		int count = 0;
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i) instanceof Endorsement) {
@@ -410,6 +422,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getTotalCommentPosts() {
+		// Count all posts of type Comment in posts array
 		int count = 0;
 		for (int i=0; i < posts.size(); i++) {
 			if (posts.get(i) instanceof Comment) {
@@ -421,9 +434,9 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getMostEndorsedPost() {
+		// Check each post in posts array and keep track of the most endorsed post and it's endorsement count
 		Post topPost = null;
 		int topCount = 0;
-		
 		for (int i=0; i < posts.size(); i++) {
 			ArrayList<Endorsement> endorsements = posts.get(i).getEndorsements();
 			if (endorsements.size() >= topCount) {
@@ -432,6 +445,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
+		// Return 0 if no posts in system
 		if (topPost == null) {
 			return 0;
 		} else {
@@ -441,9 +455,9 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getMostEndorsedAccount() {
+		// Check each account and keep track of the most endorsed account and it's endorsement count
 		Account topAccount = null;
 		int topCount = 0;
-		
 		for (int i=0; i < accounts.size(); i++) {
 			if (accounts.get(i).getTotalEndorsments() >= topCount) {
 				topAccount = accounts.get(i);
@@ -451,6 +465,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
+		// Return 0 if no accounts in system
 		if (topAccount == null) {
 			return 0;
 		} else {
@@ -472,37 +487,52 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public void savePlatform(String filename) throws IOException {
 		try {
+			// Create ObjectOutputStream for given filepath (creates file if one not found)
 			FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream (file);
             
+			// Write accounts and posts arrays into file
 			out.writeObject(accounts);
 			out.writeObject(posts);
             
+			// Properly close output streams once finished
 			out.close();
 			file.close();
+
+		// Pass through exceptions if thrown during file write process
         } catch(IOException e) {
             throw e;
         }
-
 	}
 
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
 		try {  
+			// Create ObjectInputStream for given filename
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(file);
              
+			// Load accounts and posts array objects from serialised file
             accounts = (ArrayList<Account>)in.readObject();
 			posts = (ArrayList<Post>)in.readObject();
-             
+
+			// Set the count in Account & Post classes to largest current identifier just loaded
+            Account lastAccount = accounts.get(accounts.size() - 1);
+			Account.setCount(lastAccount.getIdentifier());
+
+			Post lastPost = posts.get(posts.size() - 1);
+			Post.setCount(lastPost.getIdentifier());
+			
+			// Properly close input streams once finished
             in.close();
             file.close();
+
+		// Pass through exceptions if thrown during file read process
         } catch(IOException e) {
             throw e;
         } catch(ClassNotFoundException e) {
             throw e;
         }
-
 	}
 
 }
