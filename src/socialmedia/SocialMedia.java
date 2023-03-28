@@ -390,7 +390,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public int getTotalOriginalPosts() {
 		int count = 0;
 		for (int i=0; i < posts.size(); i++) {
-			if (posts.get(i) instanceof Post) {
+			if (!(posts.get(i) instanceof Comment) && !(posts.get(i) instanceof Endorsement)) {
 				count += 1;
 			}
 		}

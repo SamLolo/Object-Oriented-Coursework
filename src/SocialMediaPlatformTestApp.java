@@ -424,6 +424,174 @@ public class SocialMediaPlatformTestApp {
 		System.out.print(platform.showPostChildrenDetails(comment5Id));
 	}
 
-	//Tests for
+	//Tests for getNumberOfAccounts
+	@Test
+	public void getNumberOfAccounts_Test() throws IllegalHandleException, InvalidHandleException, AccountIDNotRecognisedException {
+		int numOfAccounts = platform.getNumberOfAccounts();
+		int accountId = platform.createAccount(getNewAccountHandle());
+		assertEquals(numOfAccounts + 1, platform.getNumberOfAccounts());
+		platform.removeAccount(accountId);
+		assertEquals(numOfAccounts, platform.getNumberOfAccounts());
+	}
+
+	//Tests for getTotalOriginalPosts
+	@Test
+	public void getTotalOriginalPosts_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		int numOfPosts = platform.getTotalOriginalPosts();
+
+		String account = getNewAccountHandle();
+		platform.createAccount(account);
+
+		int postId = platform.createPost(account, "This is the default message.");
+		platform.commentPost(account, postId, "This is the default message for a comment.");
+		platform.endorsePost(account, postId);
+
+		assertEquals(numOfPosts + 1, platform.getTotalOriginalPosts());
+
+		platform.deletePost(postId);
+		assertEquals(numOfPosts, platform.getTotalOriginalPosts());
+	}
+
+	//Tests for getTotalEndorsedPosts
+	@Test
+	public void getTotalEndorsedPosts_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		int numOfEndorsements = platform.getTotalEndorsmentPosts();
+
+		String account = getNewAccountHandle();
+		platform.createAccount(account);
+
+		int postId = platform.createPost(account, "This is the default message.");
+		int endorsementId = platform.endorsePost(account, postId);
+
+		assertEquals(numOfEndorsements + 1, platform.getTotalEndorsmentPosts());
+
+		platform.deletePost(endorsementId);
+		assertEquals(numOfEndorsements, platform.getTotalEndorsmentPosts());
+	}
+
+	//Tests for getTotalCommentPosts
+	@Test
+	public void getTotalCommentPosts_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		int numOfComments = platform.getTotalCommentPosts();
+
+		String account = getNewAccountHandle();
+		platform.createAccount(account);
+
+		int postId = platform.createPost(account, "This is the default message.");
+		int commentId = platform.commentPost(account, postId, "This is the default message for a comment.");
+
+		assertEquals(numOfComments + 1, platform.getTotalCommentPosts());
+
+		platform.deletePost(commentId);
+		assertEquals(numOfComments, platform.getTotalCommentPosts());
+	}
+
+	//Tests for getMostEndorsedPost
+	@Test
+	public void getMostEndorsedPost_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		String account1 = getNewAccountHandle();
+		platform.createAccount(account1);
+		int post1Id = platform.createPost(account1, "This is the default message.");
+		platform.endorsePost(account1, post1Id);
+		//platform.endorsePost(account1, post1Id);
+		//platform.endorsePost(account1, post1Id);
+
+		String account2 = getNewAccountHandle();
+		platform.createAccount(account2);
+		int post2Id = platform.createPost(account2, "This is the default message.");
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+
+
+		assertEquals(post2Id, platform.getMostEndorsedPost());
+	}
+
+	// Tests for getMostEndorsedAccount
+	@Test
+	public void getMostEndorsedAccount_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		String account1 = getNewAccountHandle();
+		int account1Id = platform.createAccount(account1);
+		int post1Id = platform.createPost(account1, "This is the default message.");
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+
+		String account2 = getNewAccountHandle();
+		int account2Id = platform.createAccount(account2);
+		int post2Id = platform.createPost(account2, "This is the default message.");
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+		platform.endorsePost(account2, post2Id);
+
+
+
+
+		assertEquals(account2Id, platform.getMostEndorsedAccount());
+	}
+
+	// Tests for erasePlatform
+	@Test
+	public void erasePlatform_Test() throws IllegalHandleException, InvalidHandleException, InvalidPostException, HandleNotRecognisedException, NotActionablePostException, PostIDNotRecognisedException {
+		int numOfAccounts = platform.getNumberOfAccounts();
+		int numOfPosts = platform.getTotalOriginalPosts();
+
+		String account1 = getNewAccountHandle();
+		int account1Id = platform.createAccount(account1);
+		int post1Id = platform.createPost(account1, "This is the default message.");
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+
+		assertEquals(numOfAccounts + 1 , platform.getNumberOfAccounts());
+		assertEquals(numOfPosts + 1, platform.getTotalOriginalPosts());
+
+		platform.erasePlatform();
+		assertEquals(0 , platform.getNumberOfAccounts());
+		assertEquals(0, platform.getTotalOriginalPosts());
+	}
+
+	//Tests for savePlatform / LoadPlatform
+	@Test
+	public void savePlatform_loadPlatform_Test() throws IllegalHandleException, InvalidHandleException, NotActionablePostException, PostIDNotRecognisedException, HandleNotRecognisedException, InvalidPostException {
+		int numOfAccounts = platform.getNumberOfAccounts();
+		int numOfPosts = platform.getTotalOriginalPosts();
+
+		String account1 = getNewAccountHandle();
+		int account1Id = platform.createAccount(account1);
+		int post1Id = platform.createPost(account1, "This is the default message.");
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+		platform.endorsePost(account1, post1Id);
+
+		assertEquals(numOfAccounts + 1 , platform.getNumberOfAccounts());
+		assertEquals(numOfPosts + 1, platform.getTotalOriginalPosts());
+
+		platform.savePlatform("helle");
+
+		platform.erasePlatform();
+		assertEquals(0 , platform.getNumberOfAccounts());
+		assertEquals(0, platform.getTotalOriginalPosts());
+	}
 }
 
