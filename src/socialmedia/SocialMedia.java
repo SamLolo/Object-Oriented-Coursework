@@ -46,7 +46,6 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Create new account object using given handle
 		Account newAccount = new Account(handle);
-		System.out.println("New "+newAccount);
 		accounts.add(newAccount);
 		return newAccount.getIdentifier();
 	}
@@ -71,7 +70,6 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		// Create new account object using given handle and description
 		Account newAccount = new Account(handle, description);
-		System.out.println("New "+newAccount);
 		accounts.add(newAccount);
 		return newAccount.getIdentifier();
 	}
@@ -107,7 +105,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -141,7 +138,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				}
 			}
 		}
-
 	}
 
 	@Override
