@@ -1,1 +1,3 @@
-Sam Townley and Charles Symmonds
+ECM1410 - Object Oriented Programming
+
+Social Media Coursework.
